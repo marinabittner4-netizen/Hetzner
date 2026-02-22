@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" role="img" aria-label="Einlagen">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9fafb"/>
+      <stop offset="1" stop-color="#e5e7eb"/>
+    </linearGradient>
+  </defs>
+  <rect x="10" y="10" width="180" height="180" rx="22" fill="url(#g)" stroke="#d1d5db" stroke-width="2"/>
+  <path d="M70 70h60c12 0 20 8 20 20v20c0 12-8 20-20 20H70c-12 0-20-8-20-20V90c0-12 8-20 20-20z" fill="none" stroke="#9ca3af" stroke-width="8"/><path d="M75 100h50" stroke="#9ca3af" stroke-width="8" stroke-linecap="round"/>
+  <text x="100" y="168" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" font-size="14" fill="#6b7280">Einlagen</text>
+</svg>

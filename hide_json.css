@@ -1,0 +1,6 @@
+
+/* Technische Daten (JSON) komplett ausblenden */
+details,
+details summary {
+  display: none !important;
+}

@@ -1,0 +1,2887 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marina Pflegebox Konfigurator – 4 Schritte</title>
+  <style>
+    /* ===== Brand (angepasst an pb-marina.de) ===== */
+    :root {
+      --max: 42;
+      --brand:#e53935;        /* Marina-Rot */
+      --brandDark:#c62828;    /* Hover/Active */
+      --ink:#111;
+      --muted:#667085;
+      --line:#e8e8ef;
+      --bg:#f5f5f7;           /* leicht hellgrau wie Website */
+    }
+    * { box-sizing:border-box; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; background:var(--bg); color:var(--ink); }
+    header { background:#fff; border-bottom:1px solid var(--line); position: sticky; top:0; z-index: 5; }
+    .topbar{ height:44px; background:var(--brand); display:flex; align-items:center; }
+    .topbar .wrap{ display:flex; justify-content:center; gap:18px; }
+    .topbar a{ width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; border-radius:999px; border:1px solid rgba(255,255,255,.35); }
+    .topbar svg{ width:16px; height:16px; fill:#fff; }
+    .headInner{ padding: 18px 0 14px; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+
+    h1 { margin: 0; }
+    .brandRow{ display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap; }
+    .logoWord{
+      font-family: "Brush Script MT","Segoe Script","Snell Roundhand",cursive;
+      font-size: 44px;
+      line-height: .9;
+      color: var(--brand);
+      letter-spacing: .2px;
+      font-weight: 500;
+      display:flex;
+      align-items:flex-end;
+      gap:8px;
+    }
+    .logoHeart{ width:18px; height:18px; margin-bottom:6px; }
+    .logoHeart path{ fill: var(--brand); }
+    .logoSub{ font-weight:900; letter-spacing:.7px; font-size:12px; color:#111; margin-top:2px; }
+    .sub { margin:8px 0 0; color:#555; font-size: 13px; }
+
+    .topline { display:flex; gap:12px; align-items:flex-start; justify-content:space-between; flex-wrap: wrap; }
+    .pill { padding: 6px 10px; border-radius: 999px; font-size: 12px; border:1px solid var(--line); background:#fff; }
+    .pill strong { font-variant-numeric: tabular-nums; }
+
+    /* Stepper */
+    .stepper { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px; }
+    .stepDot {
+      display:flex; align-items:center; gap:8px; padding: 8px 10px; border:1px solid var(--line);
+      border-radius: 999px; background:#fff; color:#475467; font-size: 12px;
+    }
+    .stepDot b { display:inline-flex; width:22px; height:22px; align-items:center; justify-content:center; border-radius:999px; border:1px solid var(--line); font-size:12px; }
+    .stepDot.active { border-color: rgba(229,57,53,.28); background: rgba(229,57,53,.06); color:#1d2939; }
+    .stepDot.active b { border-color: rgba(229,57,53,.35); background: rgba(229,57,53,.12); }
+    .stepDot.done { border-color:#d1fadf; background:#ecfdf3; color:#027a48; }
+    .stepDot.done b { border-color:#abefc6; background:#d1fadf; }
+
+    /* Layout */
+    main { padding: 16px 0 22px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius: 18px; padding: 16px; box-shadow: 0 6px 22px rgba(0,0,0,.05); }
+    .card h2 { margin:0 0 10px; font-size: 16px; }
+
+    .grid { display:grid; grid-template-columns: 1fr 0.7fr; gap:16px; }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } header{ position: static; } }
+
+    /* Products */
+    .row { display:grid; grid-template-columns: 84px 1fr auto; gap:12px; padding: 10px 0; border-top:1px dashed #ececf5; align-items:center; }
+    .row:first-of-type { border-top:0; }
+    .pimg { width:84px; height:64px; object-fit:contain; border-radius: 12px; background:#f5f6fb; border:1px solid #ececf5; cursor:pointer; }
+    .name { font-weight: 650; }
+    .meta { color:#666; font-size:12px; margin-top:2px; }
+    .controls { display:flex; align-items:center; gap:10px; }
+    .price { font-variant-numeric: tabular-nums; white-space:nowrap; }
+    .qty { display:flex; align-items:center; gap:6px; }
+    /* Gloves sizes */
+    .sizes { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .sizeBtn { padding:6px 8px; font-size:12px; border-radius: 999px; }
+    .sizeBtn.active { background: #fff0f0; border-color: var(--brand); color: #111; }
+    .sizeBtn:disabled { opacity:.45; cursor:not-allowed; }
+
+    input[type="number"] { width: 76px; padding: 8px; border:1px solid #d9d9e6; border-radius: 10px; font-size: 14px; }
+    button { border:1px solid #d9d9e6; background:#fff; padding:8px 10px; border-radius: 10px; cursor:pointer; }
+    button:hover { background:#fff5f5; }
+    .primary { background:var(--brand); color:#fff; border-color:var(--brand); }
+    .primary:hover { background:var(--brandDark); }
+    .secondary { background:#fff; }
+    .danger { background:#fff1f2; border-color:#fecdd3; color:#9f1239; }
+    .danger:hover { background:#ffe4e6; }
+    .disabled { opacity:.55; pointer-events:none; }
+
+    .pdesc { grid-column: 1 / -1; margin: 8px 0 0; color:#444; font-size:13px; line-height:1.35;
+      max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+    .pdesc.open { max-height: 260px; }
+    .pdescInner { padding: 10px 12px; background:#f5f6fb; border:1px solid #ececf5; border-radius: 12px; }
+
+    @media (max-width: 520px){
+      .row{ grid-template-columns: 70px 1fr; grid-template-rows:auto auto; }
+      .controls{ grid-column: 1 / -1; justify-content:flex-start; }
+      .pimg{ width:70px; height:60px; }
+    }
+
+    /* Budget bar */
+    .barWrap { height: 10px; background:#fff0f0; border-radius: 999px; overflow:hidden; border:1px solid rgba(229,57,53,.18); }
+    .bar { height: 100%; width: 0%; background: var(--brand); transition: width .2s ease; }
+    .warn { color:#b42318; font-size: 12px; margin-top: 8px; display:none; }
+    .ok { color:#1a7f37; font-size: 12px; margin-top: 8px; display:none; }
+
+    /* Forms */
+    .formCard{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:16px; box-shadow: 0 6px 22px rgba(0,0,0,.04); }
+    .formCard h3{ margin:0 0 12px; font-size:20px; }
+    .formGrid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+    .formGrid .full{ grid-column: 1 / -1; }
+    .req{ color:#b42318; margin-left:2px; font-weight:700; }
+    .checkRow{ display:flex; align-items:center; gap:10px; padding: 10px 12px; border:1px solid #e6e6f2; border-radius: 12px; background:#fafaff; }
+    .checkRow input{ width:18px; height:18px; }
+    .questionBox{ justify-content:center; text-align:center; }
+    .questionBox span{ font-size:18px; font-weight:800; color:#1d2939; }
+
+    @media (max-width: 720px){ .formGrid{ grid-template-columns: 1fr; } }
+    .form { display:grid; gap:10px; }
+    .field label { display:block; font-size: 12px; color:#666; margin-bottom: 4px; }
+    .field input, .field textarea, .field select {
+      width:100%; padding: 10px; border-radius: 12px; border:1px solid #d9d9e6; font-size: 14px; background:#fff;
+    }
+    textarea { min-height: 88px; resize: vertical; }
+
+    .nav { display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; margin-top: 12px; }
+    .nav .left, .nav .right { display:flex; gap:10px; flex-wrap:wrap; }
+
+    .summary pre { margin:0; background:#0b1020; color:#e6e6ff; padding: 12px; border-radius: 12px; overflow:auto; font-size: 12px; }
+    .muted { color:#666; font-size: 12px; margin-top:6px; }
+
+    footer { padding: 18px 16px 26px; color:#6b7280; font-size:12px; text-align:center; }
+    footer a { color:inherit; }
+  
+    button:disabled{opacity:.45; cursor:not-allowed;}
+
+    .hint{margin-top:8px;font-size:12px;color:#667085;}
+    button:disabled{opacity:.45;cursor:not-allowed;}
+    input[readonly]{background:#f8fafc;color:#475467;}
+
+    /* Insurance buttons + provider lists */
+    .segRow{display:flex; gap:10px; flex-wrap:wrap;}
+    .segBtn{padding:10px 12px; border-radius: 12px; font-weight:800;}
+    .segBtn.active{background:var(--brand); color:#fff; border-color:var(--brand);}
+    .segHint{margin-top:6px; font-size:12px; color:#667085;}
+        .insSearch{margin-top:10px;}
+    .insSearch input{width:100%; padding:10px 12px; border:1px solid #e6e6f2; border-radius:12px; background:#fff;}
+.insList{display:grid; grid-template-columns: 1fr 1fr; gap:8px 10px; margin-top:10px;}
+    .insList label{display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid #e6e6f2; border-radius:12px; background:#fafaff; cursor:pointer;}
+    .insList input{width:18px; height:18px;}
+    .hidden{display:none !important;}
+    @media (max-width: 560px){ .insList{grid-template-columns: 1fr;} }
+
+    /* --- PDF Vorschau (Schritt 4) – DIN A4 + Seitennavigation --- */
+    .pdfA4Wrap{
+      width: 794px;
+      height: 1123px;
+      max-width: 100%;
+      margin: 0 auto;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow: 0 10px 28px rgba(0,0,0,.10);
+    }
+    .pdfA4Wrap iframe{ width:100%; height:100%; border:0; }
+    .pdfCanvasWrap{width:100%; height:100%;}
+    #pdfCanvas{display:block; width:100%; height:100%;}
+
+    .pdfNav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      width: 794px;
+      max-width: 100%;
+      margin: 10px auto 0;
+    }
+    .pdfPageLabel{
+      font-weight:900;
+      color:#344054;
+      font-size:13px;
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background:#fff;
+      white-space:nowrap;
+    }
+     (max-width: 860px){
+      .pdfA4Wrap{ width:100%; height: calc(100vh - 260px); border-radius:12px; }
+      .pdfNav{ width:100%; }
+    }
+
+    /* --- Formular (Schritt 4) – A4‑Preview + Druck/PDF --- */
+    .a4 { width: 794px; max-width: 100%; margin: 0 auto; background:#fff; color:#111; }
+    .a4Page { padding: 32px 34px; border:1px solid #e5e7eb; border-radius:14px; }
+    .fTitle { font-weight:900; font-size:18px; margin:0 0 14px; }
+    .fRow { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:18px; }
+    .fLine { border-bottom:1.5px solid #111; height: 22px; position:relative; }
+
+    .fValue { position:absolute; left:0; top:2px; right:0; padding:0 4px; font-weight:800; font-size:12px; background:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    @media (max-width: 520px){ .fValue{ font-size:11px; } }
+    .fLine .cap { position:absolute; left:0; top:26px; font-size:11px; color:#111; }
+    .fSmall { font-size:11px; }
+    .fBlock { margin-top: 10px; }
+    .fTable { width:100%; border-collapse:collapse; font-size:11px; }
+    .fTable th, .fTable td { border:1px solid #111; padding:6px 6px; vertical-align:top; }
+    .fTable th { font-weight:800; }
+    .fSubHead { font-weight:900; text-align:center; background:#f2f4f7; }
+    .fChk { display:inline-block; width:12px; height:12px; border:1.5px solid #111; margin-right:8px; vertical-align:middle; }
+    .fChk.on { background: #111; box-shadow: inset 0 0 0 2px #fff; }
+    /* Unterschriftsfeld: Linie unten, Signatur liegt sichtbar ÜBER der Linie */
+    .sigLine { border-bottom:1.5px solid #111; height: 52px; position:relative; }
+    .sigImg {
+      position:absolute;
+      left:0;
+      bottom:2px; /* direkt über der Linie */
+      height: 42px;
+      max-width: 100%;
+      object-fit:contain;
+      display:block;
+      margin:0;
+      pointer-events:none;
+      user-select:none;
+    }
+    .twoCol { display:grid; grid-template-columns: 1fr 1fr; gap:18px; }
+    .printOnly { display:none; }
+    @media print {
+      header, aside, footer, .nav, .stepper, .topline, .barWrap, .warn, .ok { display:none !important; }
+      body { background:#fff; }
+      main { padding:0 !important; }
+      .card { border:0 !important; box-shadow:none !important; }
+      .a4Page { border:0 !important; border-radius:0 !important; padding: 0 !important; }
+      .printOnly { display:block; }
+      .noPrint { display:none !important; }
+      .a4 { width:auto; }
+      .pageBreak { page-break-after: always; break-after: page; }
+    }
+  
+    .price{ display:none !important; }
+    .fieldBudget{ display:none !important; }
+
+    /* --- Extra-Feld unter Produkten (optional) --- */
+    .extraSection{ margin-top:16px; padding:16px; border-radius:16px; border:1px solid rgba(229,57,53,.18); background:#fff7f7; }
+    .extraBanner{ background:var(--brand); color:#fff; border-radius:12px; padding:10px 12px; font-weight:900; text-align:center; }
+    .extraBanner b{ font-size:16px; }
+    .extraCard{ margin-top:12px; background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px; display:grid; grid-template-columns: 92px 1fr auto; gap:14px; align-items:center; }
+    .extraImg{ width:92px; height:72px; border-radius:14px; background:#f5f6fb; border:1px solid #ececf5; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .extraImg img{ width:100%; height:100%; object-fit:contain; }
+    .extraTitle{ font-weight:900; font-size:16px; margin:0; }
+    .extraSub{ margin:4px 0 0; color:#475467; font-size:12px; }
+    .extraList{ margin:10px 0 0; padding-left:18px; color:#344054; font-size:13px; line-height:1.35; }
+    .extraQty{ display:flex; align-items:center; gap:10px; }
+    .extraQty .btnMini{ width:40px; height:40px; border-radius:12px; border:1px solid #d9d9e6; background:#fff; font-size:18px; }
+    .extraQty .btnMini:hover{ background:#fff5f5; }
+    .extraQty .count{ min-width:24px; text-align:center; font-weight:900; font-variant-numeric: tabular-nums; }
+    .extraNote{ margin-top:10px; color:#475467; font-size:12px; }
+    @media (max-width: 640px){
+      .extraCard{ grid-template-columns: 70px 1fr; grid-template-rows:auto auto; }
+      .extraQty{ grid-column: 1 / -1; justify-content:flex-start; }
+      .extraImg{ width:70px; height:60px; }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Topbar wie auf pb-marina.de (nur Optik, keine Pflicht-Links) -->
+  <div class="topbar" aria-hidden="true">
+    <div class="wrap">
+      <a href="#" tabindex="-1" aria-label="Instagram" title="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3Zm-5 4.5A5.5 5.5 0 1 1 6.5 14 5.51 5.51 0 0 1 12 8.5Zm0 2A3.5 3.5 0 1 0 15.5 14 3.5 3.5 0 0 0 12 10.5ZM18 7.2a1 1 0 1 1-1 1 1 1 0 0 1 1-1Z"/></svg>
+      </a>
+      <a href="#" tabindex="-1" aria-label="Facebook" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M13.5 22v-8h2.7l.4-3H13.5V9.1c0-.9.3-1.5 1.5-1.5h1.7V5a23 23 0 0 0-2.5-.1C11.7 4.9 10 6.4 10 9v2H7.5v3H10v8h3.5Z"/></svg>
+      </a>
+      <a href="#" tabindex="-1" aria-label="TikTok" title="TikTok">
+        <svg viewBox="0 0 24 24"><path d="M14 3v10.1a3.6 3.6 0 1 1-3-3.5V7.1a6.1 6.1 0 1 0 6.6 6.1V8.6c1.1.8 2.4 1.2 3.9 1.2V6.7c-1.1 0-2.1-.4-2.9-1.1A4.1 4.1 0 0 1 17.3 3H14Z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="headInner">
+    <div class="wrap">
+      <div class="topline">
+        <div>
+          <div class="brandRow">
+            <div class="logoWord">
+              Marina
+              <svg class="brandMark" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-8-4.6-9.8-10.1C1 7.7 3.2 5 6.2 5c1.7 0 3.2.9 3.8 2.2C10.6 5.9 12.1 5 13.8 5c3 0 5.2 2.7 4 5.9C20 16.4 12 21 12 21z" fill="currentColor"/>
+              </svg>
+            </div>
+            <div>
+              <div class="logoSub">PFLEGEBERATUNG &amp; ALLTAGSHILFE</div>
+              <div class="sub">Pflegebox-Konfigurator – in 4 Schritten zur fertigen Box.</div>
+            </div>
+          </div>
+        </div>
+        <div class="pill">Budget wird automatisch geprüft.<span id="budgetShow" style="display:none"></span><span id="sumShow" style="display:none"></span></div>
+      </div>
+
+    <div class="stepper" aria-label="Schritte">
+      <div class="stepDot active" id="dot1"><b>1</b><span>Produkte</span></div>
+      <div class="stepDot" id="dot2"><b>2</b><span>Lieferinfo</span></div>
+      <div class="stepDot" id="dot3"><b>3</b><span>Versicherung</span></div>
+      <div class="stepDot" id="dot4"><b>4</b><span>Übersicht</span></div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div class="barWrap"><div class="bar" id="bar"></div></div>
+      <div class="warn" id="warn">⚠️ Budget überschritten – reduziere Mengen.</div>
+      <div class="warn" id="req">⚠️ Bitte wähle eine Handschuhgröße (S–XL).</div>
+      <div class="ok" id="ok">✅ Passt ins Budget.</div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="grid">
+
+      <!-- STEP CONTENT (left) -->
+      <section class="card" aria-label="Konfigurator">
+
+        <!-- Step 1 -->
+        <div class="step" id="step1">
+          <h2>Schritt 1: Produkte auswählen</h2>
+          <p style="margin:0 0 10px; color:#475467; font-size:13px; line-height:1.5;">
+            Wähle deine Produkte aus. Das Budget wird live geprüft.
+          </p>
+
+          <div class="form" style="margin-bottom:12px;">
+            <div class="field fieldBudget">
+              <label>Budget (€, z. B. 42)</label>
+              <input id="budget" type="number" min="0" step="0.01" value="42" readonly aria-readonly="true" title="Budget ist fest (42 €)." />
+            </div>
+            <div class="field">
+              <label>Pflegegrad (für den Antrag)</label>
+              <select id="pflegegrad">
+                <option value="">Bitte wählen</option>
+                <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+              </select>
+            <div class="hint" id="pgHint">Bitte zuerst einen Pflegegrad auswählen, um fortzufahren.</div>
+            </div>
+          </div>
+
+          <div id="productList"></div>
+
+          <!-- Extra-Feld (optional) – wie im Beispiel "Zusätzlicher Schutz" -->
+          <div class="extraSection" id="extraSection">
+            <div class="extraBanner">Zusätzlich beantragen: <b>Extra Schutz für 0 €</b></div>
+            <div class="extraCard">
+              <div class="extraImg" aria-hidden="true">
+                <img src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 90'><rect x='1' y='1' width='118' height='88' rx='16' fill='%23f5f6fb' stroke='%23ececf5'/><path d='M26 66c14-26 28-36 48-36s34 10 28 36c-4 18-18 22-30 22S30 84 26 66z' fill='%23d1fae5'/><path d='M30 60c8-18 16-26 28-26s20 8 16 26c-2 12-10 14-18 14S32 72 30 60z' fill='%2399f6e4'/></svg>" alt="" />
+              </div>
+              <div>
+                <div class="extraTitle">caretex® Eco Design</div>
+                <div class="extraSub">Waschbare Bettschutzeinlagen</div>
+                <ul class="extraList">
+                  <li>Kostenfrei nach Genehmigung</li>
+                  <li>Bis zu 4 Bettschutzeinlagen pro Jahr</li>
+                  <li>Bis zu 300× waschbar (weniger Müll)</li>
+                  <li>Hoher Liegekomfort &amp; zuverlässiger Schutz</li>
+                </ul>
+                <div class="extraNote">Hinweis: Dieses Extra wird <b>separat</b> gespeichert und <b>nicht</b> ins 42‑€‑Budget gerechnet.</div>
+              </div>
+              <div class="extraQty" aria-label="Menge waschbare Bettschutzeinlagen">
+                <button class="btnMini" type="button" id="extraMinus">−</button>
+                <div class="count" id="extraCount">0</div>
+                <button class="btnMini" type="button" id="extraPlus">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav">
+            <div class="left"></div>
+            <div class="right">
+              <button class="primary" id="next1" type="button" disabled>Weiter zu Lieferinformationen</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step2" style="display:none;">
+          <h2>Schritt 2: Lieferinformationen</h2>
+
+          <div class="formCard">
+            <h3>Angaben zur berechtigten Person</h3>
+
+            <div class="formGrid">
+              <div class="field">
+                <label>Pflegegrad<span class="req">*</span></label>
+                <select id="pflegegrad2">
+                  <option value="">Bitte wählen</option>
+                  <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Anrede<span class="req">*</span></label>
+                <select id="anrede">
+                  <option value="">Bitte wählen</option>
+                  <option>Frau</option>
+                  <option>Herr</option>
+                  <option>Divers</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label>Titel</label>
+                <input id="titel" type="text" placeholder="Titel" />
+              </div>
+
+              <div class="field">
+                <label>Vorname<span class="req">*</span></label>
+                <input id="vorname" type="text" placeholder="Vorname" />
+              </div>
+
+              <div class="field">
+                <label>Nachname<span class="req">*</span></label>
+                <input id="nachname" type="text" placeholder="Nachname" />
+              </div>
+
+              <div class="field">
+                <label>Straße<span class="req">*</span></label>
+                <input id="strasse" type="text" placeholder="Straße" />
+              </div>
+
+              <div class="field">
+                <label>Hausnr.<span class="req">*</span></label>
+                <input id="hausnr" type="text" placeholder="Hausnr." />
+              </div>
+
+              <div class="field full">
+                <label>Adresszusatz</label>
+                <input id="adresszusatz" type="text" placeholder="Adresszusatz" />
+              </div>
+
+              <div class="field">
+                <label>Postleitzahl<span class="req">*</span></label>
+                <input id="plz" type="text" inputmode="numeric" placeholder="Postleitzahl" />
+              </div>
+
+              <div class="field">
+                <label>Stadt<span class="req">*</span></label>
+                <input id="stadt" type="text" placeholder="Stadt" />
+              </div>
+
+              <div class="field">
+                <label>Geburtsdatum<span class="req">*</span></label>
+                <!-- Manuelle Eingabe: dd.mm.yyyy (mobil: numerische Tastatur) -->
+                <input id="geburtsdatum" type="text" inputmode="numeric" placeholder="TT.MM.JJJJ" autocomplete="bday" maxlength="10" />
+              </div>
+
+              <div class="field full">
+                <label class="checkRow">
+                  <input id="abweichend" type="checkbox" />
+                  <span>Abweichende Lieferadresse</span>
+                </label>
+              </div>
+
+              <div class="field full" id="altAddress" style="display:none;">
+                <label>Abweichende Lieferadresse (optional)</label>
+                <textarea id="altAdresseText" placeholder="Name, Straße, PLZ, Ort (falls abweichend)"></textarea>
+              </div>
+
+              <div class="field full">
+                <label>Hinweis (optional)</label>
+                <textarea id="note" placeholder="z. B. Klingel/Etage, Abstellort, Lieferhinweis."></textarea>
+              </div>
+            </div>
+
+            <div class="muted" style="margin-top:10px;">
+              Felder mit <span class="req">*</span> sind Pflichtfelder.
+            </div>
+          </div>
+
+          <div class="nav">
+            <div class="left">
+              <button class="secondary" id="back2" type="button">Zurück</button>
+            </div>
+            <div class="right">
+              <button class="primary" id="next2" type="button">Weiter zu Versicherungsdaten</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step3" style="display:none;">
+          <h2>Schritt 3: Versicherungsdaten</h2>
+
+          <div class="formCard">
+            <h3>Angaben zur berechtigten Person</h3>
+
+            <div class="formGrid">
+              <div class="field">
+                <label>Versicherungsart<span class="req">*</span></label>
+                <!-- Buttons statt Dropdown (gesetzlich vs privat). Beihilfe = Zusatz (Toggle). -->
+                <input id="versicherungsart" type="hidden" value="gesetzlich versichert" />
+                <input id="beihilfeAktiv" type="hidden" value="0" />
+                <!-- Nur bei Beihilfe relevant -->
+                <input id="beihilfeProzent" type="hidden" value="" />
+                <div class="segRow" role="group" aria-label="Versicherungsart">
+                  <button class="segBtn active" id="insTypePublic" type="button" data-type="public">Gesetzlich versichert</button>
+                  <button class="segBtn" id="insTypePrivate" type="button" data-type="private">Privat versichert</button>
+                  <button class="segBtn" id="insToggleAid" type="button" aria-pressed="false">Beihilfeberechtigt</button>
+                </div>
+                <div class="segHint">Bitte gib die Krankenkasse / private Versicherung manuell ein.</div>
+              </div>
+
+              <!-- Beihilfe-Prozentsatz (wird nur angezeigt, wenn "Beihilfeberechtigt" aktiv ist) -->
+              <div class="field full hidden" id="aidPercentWrap">
+                <label>Beihilfe‑Prozentsatz</label>
+                <div class="segRow" role="group" aria-label="Beihilfe-Prozentsatz">
+                  <button class="segBtn" id="aid50" type="button" data-aid="50">50%</button>
+                  <button class="segBtn" id="aid70" type="button" data-aid="70">70%</button>
+                  <button class="segBtn" id="aid80" type="button" data-aid="80">80%</button>
+                </div>
+                <div class="segHint">Bitte den passenden Satz auswählen (z. B. 50/70/80).</div>
+              </div>
+
+              <div class="field full">
+                  <label>Name der Krankenkasse / privaten Versicherung<span class="req">*</span></label>
+                  <input id="krankenkasseName" type="text" placeholder="z. B. Techniker Krankenkasse / Allianz" autocomplete="organization" />
+                  <div class="hint">Bitte exakt so eintragen, wie es auf der Karte steht.</div>
+                </div>
+
+              <div class="field">
+                <label>Versichertennummer<span class="req">*</span></label>
+                <input id="versichertennummer" type="text" placeholder="Versichertennummer" autocomplete="off" />
+                <div class="hint">Findest du auf deiner Gesundheitskarte.</div>
+              </div>
+
+
+
+              <div class="field">
+                <label>Telefonnummer</label>
+                <input id="telefon" type="tel" placeholder="Telefonnummer" />
+              </div>
+
+              <div class="field">
+                <label>E‑Mail</label>
+                <input id="email" type="email" placeholder="E‑Mail" />
+              </div>
+
+              <div class="field full">
+                <label class="checkRow questionBox">
+                  <input id="bezugsCheck" type="checkbox" />
+                  <span>Beziehen Sie bereits Pflegehilfsmittel?</span>
+                </label>
+              </div>
+
+              <div class="field full" id="bemerkungWrap" style="display:none;">
+                <label>Bemerkung</label>
+                <textarea id="bemerkung" placeholder="z. B. bereits anderer Anbieter / seit wann / Hinweise"></textarea>
+              </div>
+
+              <div class="field full">
+                <label class="checkRow" style="align-items:flex-start;">
+                  <input id="consent1" type="checkbox" />
+                  <span style="line-height:1.35;">
+                    Ich beantrage die Kostenübernahme für zum Verbrauch bestimmte Pflegehilfsmittel bis max. zum monatlichen Höchstbetrag nach §40 SGB XI.
+                    Sofern ich bereits Pflegehilfsmittel von einem anderen Dienstleister erhalte, trage ich die Kosten für den doppelten Bezug selbst.
+                    Mit meiner Unterschrift bestätige ich, dass die gewünschten Produkte ausschließlich für die häusliche Pflege durch private Pflegepersonen verwendet werden dürfen.
+                  </span>
+                </label>
+              </div>
+
+              <div class="field full">
+                <label class="checkRow" style="align-items:flex-start;">
+                  <input id="consent2" type="checkbox" />
+                  <span style="line-height:1.35;">
+                    Ich beantrage die Kostenübernahme für folgenden Leistungserbringer: <b>Marina Pflegebox</b>.
+                    Ich bestätige, dass die gewünschten Produkte ausschließlich für die ambulante private Pflege (nicht durch Pflegedienste) verwendet werden
+                    und meine Daten für Abrechnungszwecke an das zuständige Abrechnungszentrum weitergeleitet werden dürfen.
+                  </span>
+                </label>
+              </div>
+
+
+
+              <div class="field full">
+                <div class="form" style="gap:8px;">
+                  <button class="secondary" id="btnSignInsured" type="button" style="width:100%; text-align:left; padding:12px 14px; font-weight:800; font-size:16px;">
+                    Unterschrift Versicherte/r<span class="req">*</span>
+                  </button>
+                  <div class="muted" id="signStatusInsured">Noch keine Unterschrift (Versicherte/r) erfasst.</div>
+
+                  <div class="repOnly hidden" id="careSignBlock">
+                  <button class="secondary" id="btnSignCare" type="button" style="width:100%; text-align:left; padding:12px 14px; font-weight:800; font-size:16px;">
+                    Unterschrift Betreuungsperson
+                  </button>
+                  <div class="muted" id="signStatusCare">Noch keine Unterschrift (Betreuungsperson) erfasst.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="nav">
+            <div class="left">
+              <button class="secondary" id="back3" type="button">Zurück</button>
+            </div>
+            <div class="right">
+              <button class="primary" id="next3" type="button">Weiter zur Übersicht</button>
+            </div>
+          </div>
+        </div>
+
+<!-- Step 4 -->
+
+
+        <div class="step" id="step4" style="display:none;">
+          <h2>Schritt 4: Bestellformular (fest eingebettet)</h2>
+          <p style="margin:0 0 10px; color:#475467; font-size:13px; line-height:1.5;">
+            Unten ist das <b>Bestellformular/Lieferschein</b> eingebettet. Die anderen PDFs (Anlage&nbsp;2 und ggf. Wechselerklärung) sind <b>nur als Download</b> verfügbar.
+          </p>
+
+          <div class="nav" style="margin-top:0;">
+            <div class="left">
+              <button class="secondary" id="back4" type="button">Zurück</button>
+              <button class="danger" id="btnReset" type="button">Zurücksetzen</button>
+            </div>
+            <div class="right">
+              <button class="primary" id="btnCreateOrder" type="button">Bestellung erstellen</button>
+              <button class="primary" id="btnPdfDownload" type="button">PDF Download</button>
+            </div>
+          </div>
+
+          <!-- PDF PREVIEW AREA -->
+          <div id="printArea" style="margin-top:12px;">
+            <div id="pdfStatus" class="muted" style="margin:0 0 8px;"></div>
+            <a id="pdfOpenLink" href="#" target="_blank" rel="noopener" style="font-size:14px; margin:0 0 10px; display:inline-block;">Bestellformular in neuem Tab öffnen</a>
+
+            <div id="pdfA4Wrap" class="pdfA4Wrap">
+              
+              <div class="pdfCanvasWrap" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#fff;">
+                <canvas id="pdfCanvas" style="width:100%; height:100%;"></canvas>
+              </div>
+              <iframe id="pdfPreview" title="PDF Vorschau (Fallback)" src="about:blank" loading="lazy" style="display:none;"></iframe>
+
+            </div>
+          </div>
+
+          <div class="muted" style="margin-top:8px;">Hinweis: Anlage 2 und (optional) Wechselerklärung werden nicht angezeigt, sondern nur beim Download erzeugt.</div>
+
+        </div>
+
+      </section>
+
+      <!-- SIDE (right) -->
+      <aside class="card" aria-label="Status">
+        <h2>Status</h2>
+        <div style="display:grid; gap:10px;">
+          <div class="pill" style="border-radius:12px;">Schritt: <strong id="stepShow">1/4</strong></div>
+          <div class="pill" style="border-radius:12px;">Summe aktuell: <strong id="sumShow2">0,00 €</strong></div>
+          <div class="pill" style="border-radius:12px;">Budget: <strong id="budgetShow2">42,00 €</strong></div>
+          <div style="color:#475467; font-size:13px; line-height:1.5;">
+            <b>Hinweis:</b> Die Produktpreise sind Beispielwerte und können von Lieferantenpreisen abweichen.
+            Du kannst die Produkte/Preise direkt in der <code>products</code>-Liste im Code ändern.
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</main>
+
+
+<!-- Signature Modal -->
+<div id="signModal" style="display:none; position:fixed; inset:0; background:rgba(17,24,39,.55); z-index:9999; padding:16px;">
+  <div style="max-width:920px; margin:30px auto; background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 12px 40px rgba(0,0,0,.25);">
+    <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid #e8e8ef; background:#f6f7fb;">
+      <div id="signTitle" style="font-weight:900; font-size:20px;">Bitte unterschreiben Sie in diesem Feld</div>
+      <button id="signClose" type="button" style="border:0; background:transparent; font-size:24px; cursor:pointer; line-height:1;">×</button>
+    </div>
+    <div style="padding:14px 16px;">
+      <canvas id="signCanvas" style="width:100%; height:520px; border:1px solid #e5e7eb; border-radius:12px; background:#fafafa; touch-action:none;"></canvas>
+      <div style="display:flex; gap:10px; justify-content:flex-end; padding-top:12px; flex-wrap:wrap;">
+        <button id="signClear" type="button" class="secondary">Löschen</button>
+        <button id="signSave" type="button" class="primary">Übernehmen</button>
+      </div>
+      <div class="muted">Tipp: Mit dem Finger oder Stift unterschreiben. „Übernehmen“ speichert die Unterschrift im Formular.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © <span id="y"></span> Marina Pflegebox • Lokal nutzbar als <code>index.html</code> (kein Server nötig)
+</footer>
+
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script>
+  // Kleine Inline-Icons (damit die ZIP ohne weitere Bilddateien funktioniert)
+  const ICON = (label) =>
+    "data:image/svg+xml;utf8," +
+    encodeURIComponent(`<?xml version="1.0" encoding="UTF-8"?>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48">
+        <rect x="1" y="1" width="62" height="46" rx="12" fill="#f5f6fb" stroke="#ececf5"/>
+        <path d="M16 30c6-10 12-14 20-14s14 4 12 14c-2 10-10 12-16 12S18 40 16 30z" fill="#eef2ff"/>
+        <circle cx="24" cy="22" r="4" fill="#c7d2fe"/>
+        <text x="32" y="30" text-anchor="middle" font-family="system-ui,Segoe UI,Arial" font-size="8" fill="#475467">${label}</text>
+      </svg>`);
+
+  // 1) Produkte hier anpassen (Name, Einheit/Packungsinfo, Preis pro Stück/Packung)
+  const products = [
+    { id:"pads", name:"Bettschutzeinlagen", meta:"Einmalgebrauch", price: 24.40, factor: 50, desc:"Saugende Bettschutzeinlagen (Einmalgebrauch) zum Schutz von Matratzen, Sesseln oder Stühlen – ideal bei Inkontinenz. Inhalt/Packung je nach Anbieter.", img: ICON("Pad") },
+    { id:"fingerlings", name:"Fingerlinge", meta:"unsteril", price: 5.95, factor: 100, desc:"Unsterile Fingerlinge (latexfrei möglich) – hygienischer Schutz bei kleinen Tätigkeiten, z. B. beim Auftragen von Salben oder bei punktuellen Pflegeschritten.", img: ICON("Hand") },
+    { id:"gloves", name:"Einmalhandschuhe", meta:"100 Stk", price: 9.25, factor: 100, desc:"Einmalhandschuhe (unsteril, latexfrei möglich) – für Pflege, Haushalt und hygienische Tätigkeiten. Inhalt: 100 Stück pro Packung. Größen: S–XL.", img: ICON("Hand") },
+    { id:"medMasks", name:"Medizinische Gesichtsmasken", meta:"50 Stk", price: 4.99, factor: 100, desc:"Medizinische Gesichtsmasken (OP-Masken) – Einmalgebrauch, für den Alltag und Pflegesituationen. Inhalt je nach Anbieter (z. B. 50 Stück).", img: ICON("FFP2") },
+    { id:"ffp2", name:"FFP2-Masken", meta:"10 Stk", price: 4.99, factor: 100, desc:"Partikelfiltrierende Halbmasken (FFP2 oder vergleichbar) für den einmaligen Gebrauch. Inhalt: 10 Stück pro Packung.", img: ICON("FFP2") },
+    { id:"aprons", name:"Schutzschürzen", meta:"Einmalgebrauch", price: 14.28, factor: 100, desc:"Schutzschürzen (Einmalgebrauch) zum Schutz der Kleidung bei Pflege und Reinigung. Inhalt je nach Anbieter.", img: ICON("Schutz") },
+    { id:"apronsReusable", name:"Schutzschürzen", meta:"wiederverwendbar", price: 25.60, factor: 1, desc:"Schutzschürzen (wiederverwendbar) – abwischbar/waschbar, zur mehrfachen Nutzung in der häuslichen Pflege.", img: ICON("Schutz") },
+    { id:"serviettes", name:"Schutzservietten", meta:"Einmalgebrauch", price: 14.28, factor: 100, desc:"Schutzservietten zum Einmalgebrauch – Schutz der Kleidung beim Essen/Trinken in der Pflege.", img: ICON("Tuch") },
+    { id:"handdes", name:"Händedesinfektionsmittel", meta:"500 ml", price: 7.14, factor: 5, desc:"Händedesinfektionsmittel zur hygienischen Händedesinfektion. Hinweis im Formular: bei 500 ml Faktor 5, bei 1000 ml Faktor 10.", img: ICON("Hand") },
+    { id:"surfacedes", name:"Flächendesinfektionsmittel", meta:"500 ml", price: 6.79, factor: 5, desc:"Flächendesinfektionsmittel zur Reinigung und Desinfektion wischfester Oberflächen (z. B. Türgriffe, Bad, Küche). Hinweis: Faktor abhängig von ml.", img: ICON("Fläche") },
+    { id:"hand_wipes", name:"Händedesinfektionstücher", meta:"80–100 Stk", price: 7.14, factor: 60, desc:"Händedesinfektionstücher – praktisch für unterwegs. Inhalt je nach Packung (z. B. 80–100 Tücher).", img: ICON("Tuch") },
+    { id:"surface_wipes", name:"Flächendesinfektionstücher", meta:"80–100 Stk", price: 9.52, factor: 80, desc:"Flächendesinfektionstücher zur Reinigung/Desinfektion von wischfesten Oberflächen. Inhalt je nach Packung (z. B. 80–100 Tücher).", img: ICON("Tuch") },
+  ];
+
+  const state = Object.fromEntries(products.map(p => [p.id, 0]));
+
+  // ✅ Extra-Feld (separat vom Budget): Waschbare Bettschutzeinlagen
+  const EXTRA_WASHABLE_MAX = 4;
+  let extraWashableCount = 0;
+
+  // ✅ Handschuh-Optionen (Größe) – wird im Schritt 2 abgefragt
+  const options = { gloves: { size: "" } }; // S | M | L | XL
+
+  // ✅ Leistungserbringer (vorausgefüllt)
+  const PROVIDER = {
+    name: "Marina Pflegeberatung, Hauswirtschaft und Betreuung",
+    address: "Südheide 148, 46286 Dorsten",
+    ik: "", // falls vorhanden, hier eintragen (nur Ziffern)
+    employee: "Marina Bittner"
+  };
+
+  // ✅ Unterschriften (Canvas) – Versicherte/r + Betreuungsperson
+  const signature = { insured: "", care: "" };
+  let signTarget = "insured"; // 'insured' | 'care'
+
+  const productList = document.getElementById("productList");
+  const sumShow = document.getElementById("sumShow");
+  const sumShow2 = document.getElementById("sumShow2");
+  const budgetInput = document.getElementById("budget");
+  const budgetShow = document.getElementById("budgetShow");
+  const budgetShow2 = document.getElementById("budgetShow2");
+  const bar = document.getElementById("bar");
+  const warn = document.getElementById("warn");
+  const req = document.getElementById("req");
+  const ok = document.getElementById("ok");
+  const out = document.getElementById("output");
+  const printArea = document.getElementById("printArea");
+
+  const btnDownload = document.getElementById("btnPdfDownload");
+  const btnCreateOrder = document.getElementById("btnCreateOrder");
+  const btnSignInsured = document.getElementById("btnSignInsured");
+  const btnSignCare = document.getElementById("btnSignCare");
+  const signStatusInsured = document.getElementById("signStatusInsured");
+  const signStatusCare = document.getElementById("signStatusCare");
+
+  const dots = [document.getElementById("dot1"), document.getElementById("dot2"), document.getElementById("dot3"), document.getElementById("dot4")];
+  const stepShow = document.getElementById("stepShow");
+  const steps = [document.getElementById("step1"), document.getElementById("step2"), document.getElementById("step3"), document.getElementById("step4")];
+  let currentStep = 0;
+
+  const eur = (n) => (new Intl.NumberFormat("de-DE", { style:"currency", currency:"EUR" })).format(n);
+
+  function budget(){
+    const v = Number(String(budgetInput.value || "0").replace(",","."));
+    return Number.isFinite(v) ? v : 0;
+  }
+
+  function calcSum(){
+    return products.reduce((acc, p) => acc + (state[p.id] * p.price), 0);
+  }
+
+  function clamp(n, min, max){
+    n = Number(n);
+    if(!Number.isFinite(n)) n = 0;
+    return Math.max(min, Math.min(max, n));
+  }
+
+  function setExtraWashable(n){
+    extraWashableCount = clamp(n, 0, EXTRA_WASHABLE_MAX);
+    const el = document.getElementById('extraCount');
+    if(el) el.textContent = String(extraWashableCount);
+  }
+
+  function bindExtraWashableUI(){
+    const minus = document.getElementById('extraMinus');
+    const plus  = document.getElementById('extraPlus');
+    if(minus) minus.addEventListener('click', ()=> setExtraWashable(extraWashableCount - 1));
+    if(plus)  plus.addEventListener('click',  ()=> setExtraWashable(extraWashableCount + 1));
+    setExtraWashable(extraWashableCount);
+  }
+
+  function selectedProducts(){
+    return products
+      .filter(p => state[p.id] > 0)
+      .map(p => ({ id:p.id, name:p.name, meta:p.meta, price:p.price, qty:state[p.id] }));
+  }
+
+  function hasGlovesSelected(){
+    return state.gloves > 0;
+  }
+
+  function glovesSizeOk(){
+    return !hasGlovesSelected() || !!options.gloves.size;
+  }
+
+  function inBudget(){
+    return calcSum() <= budget() + 1e-9;
+  }
+
+  function renderBar(){
+    const sum = calcSum();
+    const b = budget();
+    const pct = b > 0 ? Math.min(100, (sum / b) * 100) : 0;
+    bar.style.width = `${pct}%`;
+    sumShow.textContent = eur(sum);
+    sumShow2.textContent = eur(sum);
+    budgetShow.textContent = eur(b);
+    budgetShow2.textContent = eur(b);
+    warn.style.display = inBudget() ? "none" : "block";
+    ok.style.display = (sum > 0 && inBudget()) ? "block" : "none";
+    req.style.display = glovesSizeOk() ? "none" : "block";
+    syncGlovesButtons();
+
+    // ✅ Budget-Hard-Limit: Wenn das Budget erreicht ist, dürfen keine weiteren Produkte/Mengen mehr erhöht werden.
+    updateBudgetLocks(sum, b);
+  }
+
+  // Sperrt Plus-Buttons & Mengen-Eingaben so, dass das Budget NICHT überschritten werden kann.
+  function updateBudgetLocks(sum, b){
+    document.querySelectorAll('.row[data-pid]').forEach((row) => {
+      const pid = row.getAttribute('data-pid');
+      const p = products.find(x => x.id === pid);
+      if(!p) return;
+
+      const plus = row.querySelector('.btnPlus');
+      const input = row.querySelector('.qtyInput');
+      const qty = Number(state[pid] || 0);
+
+      // Summe ohne dieses Produkt (damit Max-Menge korrekt berechnet wird)
+      const sumExcl = sum - (qty * p.price);
+      const remaining = Math.max(0, b - sumExcl);
+      const maxQty = (p.price > 0) ? Math.floor((remaining + 1e-9) / p.price) : 999999;
+
+      // Max in Input setzen (und ggf. runterkorrigieren)
+      if(input){
+        input.max = String(Math.max(0, maxQty));
+        if(qty > maxQty){
+          state[pid] = maxQty;
+          input.value = String(maxQty);
+        }
+      }
+
+      // Plus nur erlauben, wenn +1 noch ins Budget passt
+      if(plus){
+        const canPlus = (p.price <= 0) ? true : (sum + p.price <= b + 1e-9);
+        plus.disabled = !canPlus;
+        plus.classList.toggle('disabled', plus.disabled);
+      }
+    });
+  }
+
+  // ✅ Handschuhgrößen-Buttons immer mit dem aktuellen Zustand synchron halten
+  function syncGlovesButtons(){
+    const disabled = (state.gloves || 0) === 0;
+    document.querySelectorAll('[data-gloves-size]').forEach((btn) => {
+      const size = btn.getAttribute('data-gloves-size');
+      btn.disabled = disabled;
+      btn.classList.toggle('active', !disabled && !!options.gloves.size && options.gloves.size === size);
+    });
+  }
+
+  function setStep(n){
+    currentStep = Math.max(0, Math.min(3, n));
+    steps.forEach((el, i) => el.style.display = (i === currentStep ? "block" : "none"));
+    dots.forEach((d, i) => {
+      d.classList.remove("active","done");
+      if(i < currentStep) d.classList.add("done");
+      if(i === currentStep) d.classList.add("active");
+    });
+    stepShow.textContent = `${currentStep+1}/4`;
+    // Im letzten Schritt immer eine aktuelle Übersicht anzeigen
+    if(currentStep === 3) buildOutput(false);
+  }
+
+  // Geburtsdatum: manuelle Eingabe (TT.MM.JJJJ) – inkl. Formatierung & Plausibilitätscheck
+  function normalizeDob(raw){
+    const v = String(raw || '').trim();
+    if(!v) return '';
+    // Allow paste from <input type=date> format
+    if(/^\d{4}-\d{2}-\d{2}$/.test(v)){
+      const [y,m,d] = v.split('-');
+      return `${d}.${m}.${y}`;
+    }
+    const digits = v.replace(/\D/g,'').slice(0,8);
+    if(digits.length <= 2) return digits;
+    if(digits.length <= 4) return `${digits.slice(0,2)}.${digits.slice(2)}`;
+    return `${digits.slice(0,2)}.${digits.slice(2,4)}.${digits.slice(4)}`;
+  }
+
+  function isValidDob(raw){
+    const v = normalizeDob(raw);
+    if(!/^\d{2}\.\d{2}\.\d{4}$/.test(v)) return false;
+    const [dd,mm,yyyy] = v.split('.').map(Number);
+    // Basic sanity bounds
+    if(yyyy < 1900 || yyyy > 2100) return false;
+    if(mm < 1 || mm > 12) return false;
+    if(dd < 1 || dd > 31) return false;
+    // Real date check
+    const dt = new Date(Date.UTC(yyyy, mm-1, dd));
+    return dt.getUTCFullYear() === yyyy && (dt.getUTCMonth()+1) === mm && dt.getUTCDate() === dd;
+  }
+
+  function validateStep3(){
+    const required = [
+      ['pflegegrad2','Pflegegrad'],
+      ['anrede','Anrede'],
+      ['vorname','Vorname'],
+      ['nachname','Nachname'],
+      ['strasse','Straße'],
+      ['hausnr','Hausnr.'],
+      ['plz','Postleitzahl'],
+      ['stadt','Stadt'],
+      ['geburtsdatum','Geburtsdatum'],
+    ];
+    for (const [id,label] of required){
+      const el = document.getElementById(id);
+      if(!el) continue;
+      const val = (el.type === 'checkbox') ? el.checked : (el.value || '').trim();
+      if(!val){
+        el.focus();
+        alert('Bitte ausfüllen: ' + label);
+        return false;
+      }
+    }
+
+    // Extra: Geburtsdatum Format prüfen
+    const dobEl = document.getElementById('geburtsdatum');
+    if(dobEl){
+      const normalized = normalizeDob(dobEl.value);
+      dobEl.value = normalized;
+      if(!isValidDob(normalized)){
+        dobEl.focus();
+        alert('Bitte ein gültiges Geburtsdatum eingeben (TT.MM.JJJJ).');
+        return false;
+      }
+    }
+
+    // Versicherungsart + Krankenkasse (Pflicht)
+    const va = (document.getElementById('versicherungsart')?.value || '').trim();
+    const kkName = (document.getElementById('krankenkasseName')?.value || '').trim();
+    const vnr = (document.getElementById('versichertennummer')?.value || '').trim();
+    if(!va){
+      alert('Bitte Versicherungsart auswählen.');
+      return false;
+    }
+
+    // Wenn Beihilfe als Zusatz aktiviert ist: Prozentsatz MUSS gewählt sein
+    const beihilfeOn = String(document.getElementById('beihilfeAktiv')?.value || '0') === '1';
+    const aidPct = (document.getElementById('beihilfeProzent')?.value || '').trim();
+    if(beihilfeOn && !aidPct){
+      const target = document.getElementById('aidPercentWrap');
+      target?.scrollIntoView({behavior:'smooth', block:'center'});
+      alert('Bitte den Beihilfe‑Prozentsatz auswählen (50/70/80).');
+      return false;
+    }
+    if(!kkName){
+      const target = document.getElementById('krankenkasseName');
+      target?.scrollIntoView({behavior:'smooth', block:'center'});
+      target?.focus();
+      alert('Bitte den Namen der Krankenkasse / privaten Versicherung eingeben.');
+      return false;
+    }
+    if(!vnr){
+      const target = document.getElementById('versichertennummer');
+      target?.scrollIntoView({behavior:'smooth', block:'center'});
+      target?.focus();
+      alert('Bitte die Versichertennummer eingeben.');
+      return false;
+    }
+    const repPresent = !!document.getElementById('repCheck')?.checked;
+    // Einverständnisse: BEIDE Häkchen müssen gesetzt sein (Bild 1)
+    const c1 = !!document.getElementById('consent1')?.checked;
+    const c2 = !!document.getElementById('consent2')?.checked;
+    if(!(c1 && c2)){
+      const target = document.getElementById('consent1');
+      target?.scrollIntoView({behavior:'smooth', block:'center'});
+      alert('Bitte beide Einverständnis‑Häkchen setzen, bevor du fortfahren kannst.');
+      return false;
+    }
+
+    // Unterschriften (Pflicht: Versicherte/r, Betreuungsperson nur bei gesetzl. Vertreter vorhanden)
+    if(!signature?.insured){
+      btnSignInsured?.focus();
+      alert('Bitte die Unterschrift der/des Versicherten erfassen.');
+      return false;
+    }
+    return true;
+  }
+
+  function tryNext(){
+    // Step 1 -> 2: Pflegegrad MUSS gewählt sein
+    if(currentStep === 0){
+      const pg = document.getElementById('pflegegrad');
+      if(!pg || !pg.value){
+        pg && pg.focus();
+        alert('Bitte wähle zuerst einen Pflegegrad, damit du fortfahren kannst.');
+        return;
+      }
+      setStep(1);
+      return;
+    }
+    // Step 2 -> 3: Budget & Handschuhgröße validieren
+    if(currentStep === 1){
+      renderBar();
+      if(!inBudget()) return;
+      if(!glovesSizeOk()) return;
+      setStep(2);
+      return;
+    }
+    // Step 3 -> 4
+    if(currentStep === 2){
+      if(!validateStep3()) return;
+      setStep(3);
+      return;
+    }
+  }
+
+  function tryBack(){
+    setStep(currentStep - 1);
+  }
+
+  function toggleDesc(id){
+    const el = document.getElementById(`desc-${id}`);
+    if(!el) return;
+    el.classList.toggle("open");
+  }
+
+  function renderProducts(){
+    productList.innerHTML = "";
+    products.forEach((p) => {
+      const row = document.createElement("div");
+      row.className = "row";
+      // ✅ Für Budget-Lock: Produkt-ID am Row speichern
+      row.setAttribute('data-pid', p.id);
+
+      const img = document.createElement("img");
+      img.className = "pimg";
+      img.alt = p.name;
+      img.src = p.img;
+      img.addEventListener("click", () => toggleDesc(p.id));
+
+      const info = document.createElement("div");
+      info.innerHTML = `
+        <div class="name">${p.name}</div>
+        <div class="meta">${p.meta}</div>
+      `;
+
+      const controls = document.createElement("div");
+      controls.className = "controls";
+
+      const qtyWrap = document.createElement("div");
+      qtyWrap.className = "qty";
+
+      const minus = document.createElement("button");
+      minus.type = "button";
+      minus.textContent = "−";
+      minus.classList.add('btnMinus');
+      minus.addEventListener("click", () => {
+        state[p.id] = Math.max(0, (state[p.id] || 0) - 1);
+        input.value = state[p.id];
+        if(p.id === "gloves" && state[p.id] === 0) options.gloves.size = "";
+        renderBar();
+
+      });
+
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = "0";
+      input.step = "1";
+      input.classList.add('qtyInput');
+      input.value = state[p.id];
+      input.addEventListener("input", () => {
+        let v = Math.max(0, Math.floor(Number(input.value || 0)));
+        // ✅ Budget-Hard-Limit auch bei manueller Eingabe
+        const b = budget();
+        const currentSum = calcSum();
+        const currentQty = Number(state[p.id] || 0);
+        const sumExcl = currentSum - (currentQty * p.price);
+        const remaining = Math.max(0, b - sumExcl);
+        const maxQty = (p.price > 0) ? Math.floor((remaining + 1e-9) / p.price) : v;
+        if(Number.isFinite(maxQty)) v = Math.min(v, Math.max(0, maxQty));
+
+        state[p.id] = v;
+        input.value = String(v);
+        if(p.id === "gloves" && v === 0) options.gloves.size = "";
+        renderBar();
+
+      });
+
+      const plus = document.createElement("button");
+      plus.type = "button";
+      plus.textContent = "+";
+      plus.classList.add('btnPlus');
+      plus.addEventListener("click", () => {
+        // ✅ Budget-Hard-Limit: Erhöhung nur, wenn es noch ins Budget passt
+        const b = budget();
+        const sum = calcSum();
+        if(p.price > 0 && (sum + p.price > b + 1e-9)){
+          renderBar();
+          return;
+        }
+        state[p.id] = (state[p.id] || 0) + 1;
+        input.value = state[p.id];
+        renderBar();
+
+      });
+
+      qtyWrap.appendChild(minus);
+      qtyWrap.appendChild(input);
+      qtyWrap.appendChild(plus);
+
+      // Für Handschuhe: Positionen tauschen (Größe links, Menge rechts)
+      // Für alle anderen Produkte: Menge normal anzeigen
+
+      // ✅ Handschuhgrößen-Buttons & Mengen-Buttons
+      let syncGlovesUI = () => {};
+      if(p.id === "gloves"){
+        const sizesWrap = document.createElement("div");
+        sizesWrap.className = "sizes";
+        const sizes = ["S","M","L","XL"];
+        const btns = {};
+
+        sizes.forEach((s) => {
+          const b = document.createElement("button");
+          b.type = "button";
+          b.className = "sizeBtn";
+          b.textContent = s;
+          b.setAttribute('data-gloves-size', s);
+          b.addEventListener("click", () => {
+            if((state.gloves || 0) === 0) return;
+            options.gloves.size = s;
+            renderBar();
+          });
+          btns[s] = b;
+          sizesWrap.appendChild(b);
+        });
+
+        syncGlovesUI = () => {
+          const disabled = (state.gloves || 0) === 0;
+          sizes.forEach((s) => {
+            btns[s].disabled = disabled;
+            btns[s].classList.toggle("active", !!options.gloves.size && options.gloves.size === s && !disabled);
+          });
+        };
+
+        syncGlovesUI();
+        // ✅ Plätze wirklich tauschen (wie gewünscht):
+        // Gr.-Buttons links
+        controls.appendChild(sizesWrap);
+        // Mengen-Buttons rechts
+        controls.appendChild(qtyWrap);
+
+        // In die Beschriftung „meta“ kurz die Größe spiegeln (optional)
+        // (wird nicht dauerhaft verändert, nur Anzeige)
+        // info.querySelector(".meta")?.insertAdjacentHTML("beforeend", options.gloves.size ? ` • Größe: ${options.gloves.size}` : "");
+      } else {
+        controls.appendChild(qtyWrap);
+      }
+
+      row.appendChild(img);
+      row.appendChild(info);
+      row.appendChild(controls);
+
+      // Description line
+      const desc = document.createElement("div");
+      desc.className = "pdesc";
+      desc.id = `desc-${p.id}`;
+      desc.innerHTML = `<div class="pdescInner">${p.desc}</div>`;
+
+      row.appendChild(desc);
+      productList.appendChild(row);
+    });
+  }
+
+  // (Gloves size UI inline in product row)
+  function updateGlovesSizeUI(initial=false){
+    // legacy noop (Größe wird direkt neben Mengen-Buttons gewählt)
+    if(initial) renderBar();
+  }
+
+  // --- Schritt 4: Original‑Formular (Anlage 2) als A4‑Preview ---
+  const PG54_ROWS = [
+    { key:"pads", label:"saugende Bettschutzeinlagen Einmalgebrauch", pos:"54.45.01.0001", unit:"1 Stück" },
+    { key:"fingerlings", label:"Fingerlinge (Latex, unsteril; für Latexallergiker latexfrei, unsteril)", pos:"54.99.01.0001", unit:"1 Stück" },
+    { key:"gloves", label:"Einmalhandschuhe", pos:"54.99.01.1001", unit:"1 Stück" },
+    { key:"medMasks", label:"Medizinische Gesichtsmasken", pos:"54.99.01.2001", unit:"1 Stück" },
+    { key:"ffp2", label:"Partikelfiltrierende Halbmasken (FFP‑2 oder vergleichbare Masken)", pos:"54.99.01.5001", unit:"1 Stück" },
+    { key:"aprons", label:"Schutzschürzen – Einmalgebrauch", pos:"54.99.01.3001", unit:"1 Stück" },
+    { key:"apronsReusable", label:"Schutzschürzen – wiederverwendbar", pos:"54.99.01.3002", unit:"1 Stück" },
+    { key:"serviettes", label:"Schutzservietten zum Einmalgebrauch", pos:"54.99.01.4001", unit:"1 Stück" },
+    { key:"handdes", label:"Händedesinfektionsmittel", pos:"54.99.02.0001", unit:"100 ml" },
+    { key:"surfacedes", label:"Flächendesinfektionsmittel", pos:"54.99.02.0002", unit:"100 ml" },
+    { key:"hand_wipes", label:"Händedesinfektionstücher", pos:"54.99.02.0014", unit:"1 Stück" },
+    { key:"surface_wipes", label:"Flächendesinfektionstücher", pos:"54.99.02.0015", unit:"1 Stück" },
+  ];
+
+  function parseMl(meta){
+    const m = String(meta||'').match(/(\d+)\s*ml/i);
+    return m ? Number(m[1]) : 0;
+  }
+
+  function factorForMl(ml){
+    if(!ml) return 1;
+    const raw = ml / 100;
+    // Formular hat Kästchen: wir brauchen Ganzzahlen
+    return Math.max(1, Math.round(raw));
+  }
+
+  function nameLine(c){
+    const full = `${(c.vorname||'').trim()} ${(c.nachname||'').trim()}`.trim();
+    return full || '';
+  }
+
+  function addrLine(c){
+    const street = `${(c.strasse||'').trim()} ${(c.hausnr||'').trim()}`.trim();
+    const city = `${(c.plz||'').trim()} ${(c.stadt||'').trim()}`.trim();
+    return [street, city].filter(Boolean).join(', ');
+  }
+
+  function renderBoxes(text, count){
+    const v = String(text||'');
+    const chars = v.split('').slice(0, count);
+    const boxes = Array.from({length: count}).map((_,i)=>
+      `<td style="width:18px; height:18px; text-align:center; vertical-align:middle; border:1px solid #111;">${chars[i] ? chars[i].replace(/</g,'&lt;') : ''}</td>`
+    ).join('');
+    return `<table style="border-collapse:collapse; display:inline-table; vertical-align:middle;"><tr>${boxes}</tr></table>`;
+  }
+
+  function renderForm(payload){
+    if(!printArea) return;
+    const c = payload.customer || {};
+    const ins = payload.insurance || {};
+
+    // Mengen/Faktoren aus den ausgewählten Produkten ableiten
+    const qty = Object.fromEntries((payload.items||[]).map(it => [it.id, Number(it.qty||0)]));
+    const glovesSize = payload.options?.gloves?.size || '';
+
+    // Faktoren je Produkt (Menge × Faktor aus der Produktliste)
+    const unitFactor = (id) => {
+      const p = products.find(x => x.id === id);
+      const f = Number(p?.factor);
+      if(Number.isFinite(f) && f > 0) return f;
+
+      // Fallback: falls kein factor gesetzt ist (z. B. ältere Version)
+      if(id === 'handdes' || id === 'surfacedes'){
+        const ml = p?.meta ? parseMl(p.meta) : 0;
+        return factorForMl(ml || 100);
+      }
+      return 1;
+    };
+
+    const factorValue = (id) => {
+      const q = Number(qty[id] || 0);
+      if(!q) return 0;
+      return Math.max(0, Math.round(q * unitFactor(id)));
+    };
+
+    const handdesNote = (()=>{
+      const q = Number(qty.handdes || 0);
+      if(!q) return '';
+      const p = products.find(x=>x.id==='handdes');
+      const ml = p?.meta ? parseMl(p.meta) : 0;
+      const f = unitFactor('handdes');
+      return `${q}× ${ml||'500'} ml (Faktor ${f})`;
+    })();
+
+
+    const beihilfeOn = !!ins.beihilfe;
+    const beihilfePct = (ins.beihilfe_prozent||'').trim();
+
+    const insuredName = nameLine(c);
+    const insuredDob = normalizeDob(c.geburtsdatum);
+    const insuredVnr = ins.versichertennummer || '';
+    const insuredAddr = addrLine(c);
+    const kk = (ins.provider || '').trim();
+
+    const sigIns = ins.signatures?.insured || '';
+    const sigCare = ins.signatures?.care || '';
+    const careName = (ins.betreuung_name || '').trim();
+
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2,'0');
+    const mm = String(today.getMonth()+1).padStart(2,'0');
+    const yyyy = String(today.getFullYear());
+    const dateStr = `${dd}.${mm}.${yyyy}`;
+
+    const pg54Checked = true;
+
+    const rowHtml = PG54_ROWS.map(r=>{
+      let factor = '';
+      let note = '';
+
+      const fv = factorValue(r.key);
+      if(fv) factor = String(fv);
+
+      if(r.key==='gloves'){
+        note = glovesSize ? `Größe ${glovesSize}` : '';
+      }
+      if(r.key==='handdes'){
+        note = handdesNote ? `Hinweis: ${handdesNote}` : 'Bei 500 ml bitte den Faktor 5, bei 1000 ml bitte den Faktor 10 eintragen';
+      }
+      if(r.key==='surfacedes'){
+        note = 'Bei 500 ml bitte den Faktor 5, bei 1000 ml bitte den Faktor 10 eintragen';
+      }
+
+      return `
+        <tr>
+          <td>${r.label}</td>
+          <td style="white-space:nowrap;">${r.pos}</td>
+          <td style="white-space:nowrap;">${r.unit}</td>
+          <td style="white-space:nowrap; text-align:center;">${factor ? renderBoxes(factor, 4) : ''}</td>
+          <td>${note||''}</td>
+        </tr>
+      `;
+    }).join('');
+
+    printArea.innerHTML = `
+      <div class="a4">
+        <div class="a4Page">
+          <div class="fTitle">Anlage 2 – Antrag auf Kostenübernahme und Beratungsdokumentation</div>
+
+          <div class="fRow">
+            <div>
+              <div class="fLine"><span class="fValue">${insuredName||'&nbsp;'}</span></div>
+              <div class="fSmall">Name, Vorname</div>
+            </div>
+            <div>
+              <div class="fLine"><span class="fValue">${insuredDob||'&nbsp;'}</span></div>
+              <div class="fSmall">Geburtsdatum</div>
+            </div>
+            <div>
+              <div class="fLine"><span class="fValue">${insuredVnr||'&nbsp;'}</span></div>
+              <div class="fSmall">Versichertennummer</div>
+            </div>
+          </div>
+
+          <div class="fBlock" style="display:grid; grid-template-columns: 1.4fr .6fr; gap:18px;">
+            <div>
+              <div class="fLine"><span class="fValue">${insuredAddr||'&nbsp;'}</span></div>
+              <div class="fSmall">Anschrift: Straße, PLZ, Wohnort</div>
+            </div>
+            <div>
+              <div class="fLine"><span class="fValue">${kk||'&nbsp;'}</span></div>
+              <div class="fSmall">Pflegekasse</div>
+            </div>
+          </div>
+
+          <div class="fBlock">
+            <div style="font-weight:800; margin: 10px 0 6px;">Ich beantrage die Kostenübernahme für:</div>
+            <div class="fSmall" style="line-height:1.35;">
+              <span class="fChk ${pg54Checked ? 'on':''}"></span>
+              zum Verbrauch bestimmte Pflegehilfsmittel – Produktgruppe (PG 54) – bis maximal des monatlichen Höchstbetrages nach § 40 Absatz 2 SGB XI${beihilfeOn ? ` / Beihilfeberechtigung (${beihilfePct||'–'}%)` : ''}.
+            </div>
+          </div>
+
+          <table class="fTable" style="margin-top:10px;">
+            <thead>
+              <tr>
+                <th style="width:40%;">Bezeichnung</th>
+                <th style="width:16%;">Pflegehilfsmittel-<br/>positionsnummer</th>
+                <th style="width:10%;">Rechen-<br/>größe</th>
+                <th style="width:16%;">Menge/Faktor<br/>bitte eintragen</th>
+                <th>Erläuterung</th>
+              </tr>
+              <tr><th class="fSubHead" colspan="5">Zum Verbrauch bestimmte Pflegehilfsmittel (PG 54)</th></tr>
+            </thead>
+            <tbody>
+              ${rowHtml}
+            </tbody>
+          </table>
+
+          <div style="margin-top:14px;" class="twoCol">
+            <div>
+              <div class="fSmall" style="margin-bottom:6px;">Datum</div>
+              <div class="sigLine"></div>
+              <div style="margin-top:-30px; padding: 0 4px; font-weight:800;">${dateStr}</div>
+            </div>
+            <div>
+              <div class="fSmall" style="margin-bottom:6px;">Unterschrift der/des Versicherten</div>
+              <div class="sigLine">${sigIns ? `<img class="sigImg" src="${sigIns}" alt="Unterschrift Versicherte/r" />` : ''}</div>
+            </div>
+          </div>
+
+          ${(ins.rep_present ? `
+          <div style=\"margin-top:10px;\" class=\"twoCol\">
+            <div>
+              <div class=\"fSmall\" style=\"margin-bottom:6px;\">Betreuungsperson / gesetzl. Vertreter (Name)</div>
+              <div class=\"sigLine\"></div>
+              <div style=\"margin-top:-30px; padding: 0 4px; font-weight:800;\">${careName||'&nbsp;'}</div>
+            </div>
+            <div>
+              <div class=\"fSmall\" style=\"margin-bottom:6px;\">Unterschrift Betreuungsperson</div>
+              <div class=\"sigLine\">${sigCare ? `<img class=\"sigImg\" src=\"${sigCare}\" alt=\"Unterschrift Betreuungsperson\" />` : ''}</div>
+            </div>
+          </div>
+          ` : '')}
+
+          <div class="fBlock" style="margin-top:14px; border:1px solid #111; padding:10px;">
+            <div style="font-weight:900; margin-bottom:6px;">Genehmigungsvermerk der Pflegekasse</div>
+            <div class="fSmall" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+              <div><span class="fChk ${!beihilfeOn ? 'on':''}"></span> PG 54</div>
+              <div><span class="fChk ${beihilfeOn ? 'on':''}"></span> PG 54 Beihilfeberechtigung</div>
+            </div>
+            <div class="fSmall" style="margin-top:10px;">(Datum) &nbsp;&nbsp;&nbsp;&nbsp; (IK der Pflegekasse, Stempel und Unterschrift)</div>
+          </div>
+        </div>
+
+        <div class="pageBreak"></div>
+
+        <div class="a4Page">
+          <div class="fTitle">Beratungsdokumentation (Fortsetzung)</div>
+
+          <div class="fBlock" style="border:1px solid #111; padding:10px;">
+            <div class="fSmall" style="font-weight:800; margin-bottom:6px;">durch folgenden Leistungserbringer:</div>
+            <table class="fTable">
+              <thead>
+                <tr>
+                  <th>Name und Anschrift (Stempel)</th>
+                  <th style="width:32%;">Institutionskennzeichen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="height:64px;">
+                    <div style="font-weight:900;">${PROVIDER.name}</div>
+                    <div class="fSmall">${PROVIDER.address}</div>
+                  </td>
+                  <td style="text-align:center; vertical-align:middle;">${renderBoxes(PROVIDER.ik, 9)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="fBlock fSmall" style="margin-top:10px; line-height:1.35;">
+            <div style="margin:10px 0 6px; font-weight:800;">Form des Beratungsgesprächs:</div>
+            <div><span class="fChk"></span> Beratung in den Geschäftsräumen</div>
+            <div><span class="fChk on"></span> Individuelle telefonische oder digitale Beratung (z. B. Videochat)</div>
+            <div><span class="fChk"></span> Beratung in der Häuslichkeit</div>
+          </div>
+
+          <div class="twoCol" style="margin-top:14px;">
+            <div>
+              <div class="fSmall" style="margin-bottom:6px;">Datum der Beratung</div>
+              <div class="sigLine"></div>
+              <div style="margin-top:-30px; padding: 0 4px; font-weight:800;">${dateStr}</div>
+            </div>
+            <div>
+              <div class="fSmall" style="margin-bottom:6px;">Beratende/r Mitarbeiter/in</div>
+              <div class="sigLine"></div>
+              <div style="margin-top:-30px; padding: 0 4px; font-weight:800;">${(PROVIDER.employee||PROVIDER.name)||"&nbsp;"}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px;" class="twoCol">
+            <div>
+              <div class="fSmall" style="margin-bottom:6px;">Datum</div>
+              <div class="sigLine"></div>
+              <div style="margin-top:-30px; padding: 0 4px; font-weight:800;">${dateStr}</div>
+            </div>
+            <div>
+              <div class="fSmall" style="margin-bottom:6px;">Unterschrift der/des Versicherten</div>
+              <div class="sigLine">${sigIns ? `<img class="sigImg" src="${sigIns}" alt="Unterschrift Versicherte/r" />` : ''}</div>
+            </div>
+          </div>
+
+          ${(ins.rep_present ? `
+          <div style=\"margin-top:10px;\" class=\"twoCol\">
+            <div>
+              <div class=\"fSmall\" style=\"margin-bottom:6px;\">Betreuungsperson (Name)</div>
+              <div class=\"sigLine\"></div>
+              <div style=\"margin-top:-30px; padding: 0 4px; font-weight:800;\">${careName||'&nbsp;'}</div>
+            </div>
+            <div>
+              <div class=\"fSmall\" style=\"margin-bottom:6px;\">Unterschrift Betreuungsperson</div>
+              <div class=\"sigLine\">${sigCare ? `<img class=\"sigImg\" src=\"${sigCare}\" alt=\"Unterschrift Betreuungsperson\" />` : ''}</div>
+            </div>
+          </div>
+          ` : '')}
+        </div>
+      </div>
+    `;
+  }
+
+  // Wenn das markierte (blaue) Häkchen nicht aktiv ist, soll KEIN ausgefülltes Formular erzeugt werden.
+  function renderFormLocked(){
+    if(!printArea) return;
+    printArea.innerHTML = `
+      <div class="card" style="border-radius:16px; border:1px solid #fecdd3; background:#fff1f2;">
+        <div style="font-weight:900; margin-bottom:6px;">Formular noch nicht erzeugt</div>
+        <div style="color:#475467; line-height:1.5;">
+          Bitte aktiviere das <b>erste Einverständnis‑Häkchen</b> ("Ich beantrage die Kostenübernahme ...") in Schritt 3.
+          <br/>Erst dann wird das Original‑Formular automatisch ausgefüllt und kann als PDF gespeichert werden.
+        </div>
+      </div>
+    `;
+  }
+
+  function buildOutput(showToast=true){
+    const insuranceType = (document.getElementById('versicherungsart')?.value || '').trim();
+    const insuranceProvider = (document.getElementById('krankenkasseName')?.value || '').trim();
+    const beihilfeAktiv = String(document.getElementById('beihilfeAktiv')?.value || '0') === '1';
+    const beihilfeProzent = (document.getElementById('beihilfeProzent')?.value || '').trim();
+    const payload = {
+      createdAt: new Date().toISOString(),
+      budget: budget(),
+      pflegegrad: (document.getElementById("pflegegrad2")?.value || document.getElementById("pflegegrad")?.value || ""),
+      customer: {
+        pflegegrad: (document.getElementById("pflegegrad2")?.value || document.getElementById("pflegegrad")?.value || ""),
+        anrede: document.getElementById("anrede")?.value || "",
+        titel: document.getElementById("titel")?.value || "",
+        vorname: document.getElementById("vorname")?.value || "",
+        nachname: document.getElementById("nachname")?.value || "",
+        strasse: document.getElementById("strasse")?.value || "",
+        hausnr: document.getElementById("hausnr")?.value || "",
+        adresszusatz: document.getElementById("adresszusatz")?.value || "",
+        plz: document.getElementById("plz")?.value || "",
+        stadt: document.getElementById("stadt")?.value || "",
+        geburtsdatum: document.getElementById("geburtsdatum")?.value || "",
+        abweichende_lieferadresse: !!document.getElementById("abweichend")?.checked,
+        note: document.getElementById("note")?.value || "",
+      },
+      insurance: {
+        type: insuranceType,
+        provider: insuranceProvider,
+        beihilfe: beihilfeAktiv,
+        beihilfe_prozent: beihilfeProzent,
+        versichertennummer: document.getElementById('versichertennummer')?.value || "",
+        rep_present: !!document.getElementById('repCheck')?.checked,
+        betreuung_name: (document.getElementById('repCheck')?.checked ? (document.getElementById('betreuungName')?.value || "") : ""),
+        betreuung_relation: (document.getElementById('repCheck')?.checked ? (document.getElementById('betreuungRelation')?.value || "") : ""),
+        telefon: document.getElementById('telefon')?.value || "",
+        email: document.getElementById('email')?.value || "",
+        bezieht_bereits_pflegehilfsmittel: !!document.getElementById('bezugsCheck')?.checked,
+        bemerkung: document.getElementById('bemerkung')?.value || "",
+        einverstaendnis: {
+          consent1: !!document.getElementById('consent1')?.checked,
+          consent2: !!document.getElementById('consent2')?.checked,
+          consent3: !!document.getElementById('consent3')?.checked,
+        },
+        signatures: {
+          insured: signature?.insured || "",
+          care: (document.getElementById('repCheck')?.checked ? (signature?.care || "") : "")
+        }
+      },
+      options: {
+        gloves: { size: options.gloves.size || "" }
+      },
+      extras: {
+        washable_bettschutzeinlagen: extraWashableCount
+      },
+      items: selectedProducts(),
+      sum: Number(calcSum().toFixed(2))
+    };
+    out.textContent = JSON.stringify(payload, null, 2);
+    if(currentStep === 3){
+      const consent1On = !!payload?.insurance?.einverstaendnis?.consent1; // oben
+      const consent2On = !!payload?.insurance?.einverstaendnis?.consent2; // unten
+      const anyConsent = consent1On || consent2On;
+
+      // PDF nur dann erzeugen/anzeigen, wenn EIN Häkchen aktiv ist
+      if(anyConsent) renderFilledPdfPreview(payload);
+      else renderPdfLocked();
+
+      // Druck/PDF & Bestellung erst erlauben, wenn das Formular erzeugt werden darf
+      const dlBtn = document.getElementById('btnPdfDownload');
+      if(dlBtn) dlBtn.disabled = !anyConsent;
+    }
+    return payload;
+  }
+
+  // ========= PDF Vorschau =========
+  // In Schritt 4 wird NUR das Bestellformular (Lieferschein) fest eingebettet angezeigt.
+  // Anlage 2 und (optional) Wechselerklärung werden zwar erzeugt, aber NICHT in der Vorschau angezeigt
+  // (nur beim Download verfügbar).
+  const STATIC_PDF_URL = './richtige-pdf.pdf';
+  const STATIC_WECHSEL_URL = './wechsel.pdf';
+
+  let __bestellUrl = null;  // Blob-URL (Bestellformular)
+  let __anlageUrl  = null;  // Blob-URL (Anlage 2 ausgefüllt) – nur Download
+  let __wechselUrl = null;  // Blob-URL (Wechselerklärung ausgefüllt) – nur Download
+  let __wechselEnabled = false;
+
+  function withPage(url){
+    const base = String(url || '').split('#')[0];
+    return base + '#page=1';
+  }
+
+  function currentPreviewUrl(){
+    return __bestellUrl || 'about:blank';
+  }
+
+  function showPreview(){
+    const iframe = document.getElementById('pdfPreview'); // fallback
+    const openLink = document.getElementById('pdfOpenLink');
+    const url = currentPreviewUrl();
+
+    // "Open in new tab" optional: nur zeigen, wenn wirklich ein PDF existiert
+    if(openLink){
+      openLink.href = withPage(url);
+      openLink.style.display = (__bestellUrl ? 'inline-block' : 'none');
+    }
+
+    // Hauptweg: fest eingebettet ohne Toolbar (Canvas-Render via pdf.js)
+    renderBestellCanvas(url).catch((err)=>{
+      console.warn('Canvas-Preview fehlgeschlagen, nutze Fallback iFrame:', err);
+      if(iframe){
+        iframe.style.display = 'block';
+        iframe.src = withPage(url);
+      }
+    });
+  }
+
+  let __pdfPreviewUrl = null; // legacy compat
+  let __pdfBusy = false;
+
+  function clearPdfPreview(){
+    const iframe = document.getElementById('pdfPreview');
+    const status = document.getElementById('pdfStatus');
+    const openLink = document.getElementById('pdfOpenLink');
+
+    if(status) status.textContent = '';
+    if(iframe) iframe.src = currentPreviewUrl();
+    if(openLink){
+      openLink.style.display = (__bestellUrl ? 'inline-block' : 'none');
+      openLink.href = withPage(currentPreviewUrl());
+    }
+  }
+
+  function renderPdfLocked(){
+    // Vorschau bleibt sichtbar (statische PDF), nur Hinweistext anzeigen
+    clearPdfPreview();
+    const status = document.getElementById('pdfStatus');
+    if(status) status.textContent = 'Aktiviere bitte das blaue Einverständnis-Häkchen, damit das Formular als PDF erzeugt werden darf.';
+  }
+
+  
+  // ========= PDF Canvas Preview (ohne Browser-PDF-Toolbar) =========
+  // Rendert die ERZEUGTE Bestellformular-PDF (Blob-URL) in ein Canvas.
+  // Fallback: iFrame, falls pdf.js nicht verfügbar ist.
+  async function ensurePdfJs(){
+    // Wenn schon geladen → ok
+    if(window.pdfjsLib && window.pdfjsLib.getDocument) return;
+
+    // pdf.js dynamisch laden (CDN) – funktioniert bei Hosting (Vercel/Hetzner).
+    // Hinweis: Bei file:// offline kann das CDN blockiert sein → dann greift Fallback iFrame.
+    await new Promise((resolve, reject)=>{
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+    try{
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }catch(e){}
+  }
+
+  async function renderBestellCanvas(url){
+    const canvas = document.getElementById('pdfCanvas');
+    const wrap = document.getElementById('pdfA4Wrap');
+    const iframe = document.getElementById('pdfPreview'); // fallback
+    if(!canvas || !wrap) return;
+
+    // Wenn kein PDF da ist → Canvas leeren
+    if(!url || url === 'about:blank'){
+      const ctx = canvas.getContext('2d');
+      if(ctx){ ctx.clearRect(0,0,canvas.width,canvas.height); }
+      return;
+    }
+
+    // pdf.js laden
+    await ensurePdfJs();
+
+    // Blob-URL → ArrayBuffer
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('PDF konnte nicht geladen werden (Preview).');
+    const data = await res.arrayBuffer();
+
+    const loadingTask = window.pdfjsLib.getDocument({ data });
+    const pdf = await loadingTask.promise;
+    const page = await pdf.getPage(1);
+
+    // A4 Wrapper: canvas an Wrapper anpassen (mit devicePixelRatio für Schärfe)
+    const dpr = window.devicePixelRatio || 1;
+    const viewport = page.getViewport({ scale: 1 });
+
+    const targetW = wrap.clientWidth || 794;
+    const targetH = wrap.clientHeight || 1123;
+
+    const scale = Math.min(targetW / viewport.width, targetH / viewport.height);
+    const vp = page.getViewport({ scale });
+
+    canvas.width = Math.floor(vp.width * dpr);
+    canvas.height = Math.floor(vp.height * dpr);
+    canvas.style.width = Math.floor(vp.width) + 'px';
+    canvas.style.height = Math.floor(vp.height) + 'px';
+
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // iFrame ausblenden, weil Canvas jetzt rendert
+    if(iframe) iframe.style.display = 'none';
+
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+  }
+
+async function fetchArrayBuffer(url){
+    const res = await fetch(url);
+    if(!res.ok){
+      throw new Error(`PDF konnte nicht geladen werden (${res.status}): ${url}`);
+    }
+    return await res.arrayBuffer();
+  }
+
+  function safeText(v){ return String(v ?? '').trim(); }
+
+  function drawDigits(page, digits, startX, y, boxW, gap, opts={}){
+    const d = (safeText(digits)).replace(/\D/g,'');
+    const size = opts.size ?? 11;
+    for(let i=0;i<d.length;i++){
+      page.drawText(d[i], { x: startX + i*(boxW+gap), y, size });
+    }
+  }
+
+  async function generateFilledPdf(payload){
+  // pdf-lib kommt über CDN
+  const { PDFDocument } = window.PDFLib || {};
+  if(!PDFDocument) throw new Error('PDFLib nicht verfügbar (CDN nicht geladen).');
+
+  // Original-PDF aus dem ZIP laden (AcroForm vorhanden)
+  const srcBytes = await fetchArrayBuffer(STATIC_PDF_URL);
+  const pdfDoc = await PDFDocument.load(srcBytes);
+  const form = pdfDoc.getForm();
+
+  // ---- Helpers ----
+  const safeText2 = (v) => String(v ?? '').trim();
+  const digitsOnly = (v) => safeText2(v).replace(/\D/g,'');
+  const dateToDDMMYYYY = (v) => {
+    const s = safeText2(v);
+    if(!s) return "";
+    const d = s.match(/(\d{1,2})\D+(\d{1,2})\D+(\d{2,4})/);
+    if(d){
+      const dd = String(d[1]).padStart(2,'0');
+      const mm = String(d[2]).padStart(2,'0');
+      let yy = String(d[3]);
+      if(yy.length === 2) yy = (Number(yy) >= 50 ? '19'+yy : '20'+yy);
+      return dd+mm+yy;
+    }
+    const only = digitsOnly(s);
+    if(only.length === 8) return only;
+    return only;
+  };
+  const setTextSafe = (name, value) => {
+    try{ form.getTextField(name).setText(safeText2(value)); }catch(e){}
+  };
+  const checkSafe = (name, on=true) => {
+    try{
+      const cb = form.getCheckBox(name);
+      if(on) cb.check(); else cb.uncheck();
+    }catch(e){}
+  };
+
+  // ---- Daten aus dem Konfigurator ----
+  const c = payload?.customer || {};
+  const ins = payload?.insurance || {};
+
+  // Digitale Unterschrift vorhanden?
+  const hasDigitalSignature = !!(ins?.signatures?.insured && String(ins.signatures.insured).startsWith('data:image'));
+
+  // UI-Checkboxen (Bild 1): müssen beide gesetzt sein (wird im UI schon validiert)
+  const cons1 = !!ins?.einverstaendnis?.consent1;
+  const cons2 = !!ins?.einverstaendnis?.consent2;
+
+  // gemeinsames Datum (heute)
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2,'0');
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const yyyy = String(today.getFullYear());
+  const todayDigits = dd+mm+yyyy;
+  // Versorgungsbeginn = 1. des Folgemonats
+  const nextMonth = new Date(today.getFullYear(), today.getMonth()+1, 1);
+  const nmDD = '01';
+  const nmMM = String(nextMonth.getMonth()+1).padStart(2,'0');
+  const nmYYYY = String(nextMonth.getFullYear());
+  const nextMonthFirst = `${nmDD}.${nmMM}.${nmYYYY}`;
+
+  // Werte für Person/Adresse
+  const fullName = [c.nachname, c.vorname].filter(Boolean).join(', ');
+  const addr1 = [c.strasse, c.hausnr].filter(Boolean).join(' ');
+  const addr2 = [c.plz, c.stadt].filter(Boolean).join(' ');
+  const addr3 = [c.adresszusatz].filter(Boolean).join(' ');
+  const address = [addr1, addr3, addr2].filter(Boolean).join('\n');
+
+  const dobDigits = dateToDDMMYYYY(c.geburtsdatum);
+// Versichertennummer (KVNR) kann Buchstaben + Zahlen enthalten -> Auto-Uppercase, nur A-Z/0-9
+const versValue = safeText2(ins.versichertennummer).toUpperCase().replace(/[^A-Z0-9]/g,'');
+
+// =============================
+// WECHSELERKLÄRUNG (Seite 2) – deine AcroForm-Felder (txt_… / sig_unterschrift)
+// =============================
+// Felder laut deiner PDF:
+//   txt_name, txt_vorname, txt_geburtsdatum, txt_versichertennummer, txt_pflegekasse,
+//   txt_versorgungsbeginn_ab, txt_ort_datum, sig_unterschrift
+// Name/Vorname getrennt setzen (genau wie im Screenshot)
+setTextSafe('txt_name', safeText2(c.nachname));
+setTextSafe('txt_vorname', safeText2(c.vorname));
+
+// Geburtsdatum: möglichst als TT.MM.JJJJ
+const dobPretty = (() => {
+  const s = safeText2(c.geburtsdatum);
+  if(!s) return '';
+  const m = s.match(/(\d{1,2})\D+(\d{1,2})\D+(\d{2,4})/);
+  if(m){
+    const dd = String(m[1]).padStart(2,'0');
+    const mm = String(m[2]).padStart(2,'0');
+    let yy = String(m[3]);
+    if(yy.length===2) yy = (Number(yy)>=50 ? '19'+yy : '20'+yy);
+    return `${dd}.${mm}.${yy}`;
+  }
+  if(dobDigits && dobDigits.length===8){
+    return `${dobDigits.slice(0,2)}.${dobDigits.slice(2,4)}.${dobDigits.slice(4)}`;
+  }
+  return s;
+})();
+setTextSafe('txt_geburtsdatum', dobPretty);
+
+// KVNR / Versichertennummer: Auto-Uppercase, nur A-Z/0-9
+setTextSafe('txt_versichertennummer', versValue);
+
+// Pflegekasse (aus Auswahl/Feld "provider" im Konfigurator)
+setTextSafe('txt_pflegekasse', safeText2(ins.provider));
+
+// Versorgungsbeginn ab: heute (TT.MM.JJJJ)
+const todayPretty = `${dd}.${mm}.${yyyy}`;
+setTextSafe('txt_versorgungsbeginn_ab', todayPretty);
+
+// Ort, Datum (Stadt + Datum)
+const ort = safeText2(c.stadt);
+const ortDatum = ort ? `${ort}, ${todayPretty}` : todayPretty;
+setTextSafe('txt_ort_datum', ortDatum);
+  // =============================
+  // PAGE 1 (oben) immer füllen
+  // =============================
+  setTextSafe('name_vorname', fullName);
+  setTextSafe('anschrift', address);
+  setTextSafe('pflegekasse', safeText2(ins.provider));
+  setTextSafe('geb_1', dobDigits);
+  // Versichertennummer: je nach PDF heißen die Felder unterschiedlich (alte/neue Version) -> beides setzen
+setTextSafe('ver_nr', versValue);
+setTextSafe('vers_10', versValue);
+  // Standard: PG54 an (wenn Feld existiert)
+  checkSafe('chk_pg54', true);
+
+  // Produkte: qty_1 ... qty_12 => Menge/Faktor (Menge × Faktor)
+  const unitFactor = (id) => {
+    const p = products.find(x => x.id === id);
+    const f = Number(p?.factor);
+    if(Number.isFinite(f) && f > 0) return f;
+
+    // Fallback: falls kein factor gesetzt ist (z. B. ältere Version)
+    if(id === 'handdes' || id === 'surfacedes'){
+      const ml = p?.meta ? parseMl(p.meta) : 0;
+      return factorForMl(ml || 100);
+    }
+    return 1;
+  };
+
+  // Reihenfolge MUSS zur PDF passen (Anlage 2 – PG54)
+  const pg54Keys = [
+    'pads','fingerlings','gloves','medMasks','ffp2','aprons','apronsReusable','serviettes',
+    'handdes','surfacedes','hand_wipes','surface_wipes'
+  ];
+
+  const factorValues = pg54Keys.map((id) => {
+    const q = Number(state[id] || 0);
+    // Wenn keine Menge eingegeben wurde, Feld leer lassen (nicht "0" anzeigen)
+    if(!q) return '';
+    return String(Math.max(0, Math.round(q * unitFactor(id))));
+  });
+
+  const map = {
+    0: 'qty_1',
+    1: 'qty_2',
+    2: 'qty_3',
+    3: 'qty_4',
+    4: 'qty_5',
+    5: 'qty6',      // ⚠️ ohne Unterstrich in der PDF
+    6: 'qty_7',
+    7: 'qty_8',
+    8: 'qty_9',
+    9: 'qty_10',
+    10:'qty_11',
+    11:'qty_12'
+  };
+
+  Object.entries(map).forEach(([idx, fieldName]) => {
+    setTextSafe(fieldName, factorValues[Number(idx)] || '');
+  });
+
+  // Extra-Feld (falls vorhanden): qty_13
+  setTextSafe('qty_13', extraWashableCount ? String(extraWashableCount) : '');
+
+  // ✅ PG51-Checkbox automatisch setzen, wenn Extra > 0 (UI-Box → PDF-Checkbox)
+  checkSafe('chk_pg51', Number(extraWashableCount||0) > 0);
+
+  // IMPORTANT: Beratung in den Geschäftsräumen NIE setzen
+  checkSafe('chk_form_2', false);
+
+  // =============================
+  // PAGE 2 (unten) immer füllen
+  // =============================
+  setTextSafe('leistungserbringer_name_addr', [PROVIDER.name, PROVIDER.address].filter(Boolean).join('\n'));
+  setTextSafe('ik_nr', digitsOnly(PROVIDER.ik));
+  setTextSafe('mitarbeiter', safeText2(PROVIDER.employee || PROVIDER.name));
+
+  // Beratung (PDF unten) – exakt wie im Screenshot
+  // Gewünscht: ✅ Individuelle telefonische/digitale Beratung + ✅ mich persönlich
+  // AUS: Beratung in den Geschäftsräumen, Beratung in der Häuslichkeit, Betreuungs-/Vertreter-Person
+
+  const wantsConsultChecks = (cons1 || cons2 || hasDigitalSignature);
+
+  // 1) Beratung in den Geschäftsräumen (dieses Feld darf NIE gesetzt werden)
+  checkSafe('chk_beratung_bestaetigt', false);
+
+  // 2) Form des Beratungsgesprächs
+  //    chk_form_2 = Individuelle telefonische/digitale Beratung
+  //    chk_beratung_bestaetigt = Geschäftsräume (bleibt AUS)
+  //    chk_form_3 = Häuslichkeit (AUS)
+  checkSafe('chk_form_2', wantsConsultChecks);
+  checkSafe('chk_form_3', false);
+
+  // 3) Wer wurde beraten
+  //    chk_beraten_1 = mich persönlich
+  //    chk_beraten_2 = Betreuungsperson/Vertreter (AUS)
+  checkSafe('chk_beraten_1', wantsConsultChecks);
+  checkSafe('chk_beraten_2', false);
+
+  // 4) Das große Feld "Ich wurde vor der Übergabe ... umfassend beraten" (chk_form_1)
+  //    Soll ebenfalls automatisch gesetzt werden, sobald die Einwilligungen gesetzt sind
+  //    oder eine digitale Unterschrift vorhanden ist.
+  checkSafe('chk_form_1', wantsConsultChecks);
+
+  // Genehmigung: Verbindung entfernt (genehm_* wird nicht mehr automatisch gesetzt)
+  // Pflegekassen-Genehmigungsfelder hart sperren (nicht anklickbar)
+  try {
+    form.getFields().forEach(f => {
+      const n = String((f.getName && f.getName()) || '');
+      if(n.startsWith('genehm_')) {
+        if(f.enableReadOnly) f.enableReadOnly();
+      }
+    });
+  } catch(e) {}
+
+  // Datum
+  setTextSafe('datum_beratung', todayDigits);
+  setTextSafe('datum_unterschrift', todayDigits);
+
+  // Bild 2: Wenn digitale Unterschrift gesetzt ist => beide Bestätigungs-Häkchen setzen
+  // (und die UI-Checkboxen sind sowieso Pflicht – aber wir koppeln die PDF-Häkchen an die Unterschrift)
+  checkSafe('chk_bestaetigung_1', hasDigitalSignature);
+  checkSafe('chk_bestaetigung_2', hasDigitalSignature);
+
+  // --- Unterschrift als BILD zeichnen (Widget-Position wie zuvor) ---
+  const dataUrl = ins?.signatures?.insured || '';
+  if(dataUrl && dataUrl.startsWith('data:image')){
+    const base64 = dataUrl.split(',')[1] || '';
+    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    let img;
+    try{ img = await pdfDoc.embedPng(bytes); }catch(e){ img = null; }
+    if(img){
+// 1) Wenn in der Wechselerklärung ein Button-Feld für Unterschrift existiert:
+//    (pdf-lib unterstützt setImage je nach Version; daher try/catch)
+try{
+  const sigBtn = form.getButton('sig_unterschrift');
+  try{ sigBtn.setImage(img); }catch(e){}
+}catch(e){}
+
+      const page2 = pdfDoc.getPages()[1];
+
+      // Rect vom AcroForm Widget "Image1" (aus deiner richtige-pdf.pdf)
+      const x = 274.48;
+      const y = 300.05;
+      const w = 480.95 - 274.48;
+      const h = 332.38 - 300.05;
+
+      const dims = img.scale(1);
+      const scale = Math.min(w / dims.width, h / dims.height);
+      const drawW = dims.width * scale;
+      const drawH = dims.height * scale;
+
+      const dx = x + (w - drawW) / 2;
+      const dy = y + (h - drawH) / 2;
+
+      page2.drawImage(img, { x: dx, y: dy, width: drawW, height: drawH });
+    }
+  }
+
+  // ✅ Sichtbar machen: Appearance aktualisieren + Flatten (damit im Browser IMMER sichtbar & NICHT anklickbar)
+  try{ form.updateFieldAppearances(); }catch(e){}
+  try{ form.flatten(); }catch(e){}
+
+  const pdfBytes = await pdfDoc.save();
+  return new Blob([pdfBytes], { type: 'application/pdf' });
+}
+
+  async function renderFilledPdfPreview(payload){
+    if(__pdfBusy) return;
+    __pdfBusy = true;
+    const status = document.getElementById('pdfStatus');
+
+    try{
+      if(status) status.textContent = 'Formulare werden erzeugt …';
+
+      // Alte Blob-URLs freigeben
+      if(__bestellUrl){ try{ URL.revokeObjectURL(__bestellUrl); }catch{} __bestellUrl = null; }
+      if(__anlageUrl)  { try{ URL.revokeObjectURL(__anlageUrl);  }catch{} __anlageUrl  = null; }
+      if(__wechselUrl) { try{ URL.revokeObjectURL(__wechselUrl); }catch{} __wechselUrl = null; }
+
+      // Wechselerklärung nur wenn bezugsCheck UND consent2 beide aktiv
+      __wechselEnabled = !!(payload?.insurance?.einverstaendnis?.consent2 && payload?.insurance?.bezieht_bereits_pflegehilfsmittel);
+
+      // Bestellformular immer erzeugen (Vorschau)
+      const bestellBlob = await generateBestellformularPdf(payload);
+      __bestellUrl = URL.createObjectURL(bestellBlob);
+
+      // Anlage 2 immer erzeugen
+      const anlageBlob = await generateFilledPdf(payload);
+      __anlageUrl = URL.createObjectURL(anlageBlob);
+
+      // Wechselerklärung NUR erzeugen, wenn gewählt
+      if(__wechselEnabled){
+        const wechselBlob = await generateWechselPdf(payload);
+        __wechselUrl = URL.createObjectURL(wechselBlob);
+      }else{
+        __wechselUrl = null;
+      }
+      // Vorschau: immer Bestellformular
+      showPreview();
+if(status) status.textContent = (__wechselEnabled ? 'Bestellformular eingebettet – Download enthält zusätzlich Anlage 2 + Wechselerklärung.' : 'Bestellformular eingebettet – Download enthält Anlage 2.');
+    }catch(err){
+      console.error(err);
+      if(status) status.textContent = 'Fehler beim Erstellen der PDFs. Vorschau zeigt Vorlage.';
+      showPreview();
+    }finally{
+      __pdfBusy = false;
+    }
+  }
+
+
+  async function downloadFilledPdf(payload){
+    const blob = await generateFilledPdf(payload);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Anlage2_Ausgefuellt.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url);}catch{} }, 2000);
+  }
+
+  // =========================================================
+  // Bestellformular (Lieferschein) automatisch als PDF erzeugen
+  // Layout orientiert sich 1:1 am Screenshot (Bild 2)
+  // =========================================================
+  function _fmtDate(d){
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yyyy = String(d.getFullYear());
+    return `${dd}.${mm}.${yyyy}`;
+  }
+
+  function _lieferscheinNr(payload){
+    try{
+      const part1 = String(Math.floor(Math.random()*900000)+100000);
+      const part2 = String(Math.floor(Math.random()*9000)+1000);
+      return `PB-${part1}-${part2}`;
+    }catch(e){
+      return `PB-${Math.floor(Math.random()*9000000)+1000000}`;
+    }
+  }
+
+  function _customerNr(payload){
+    const c = payload?.customer || {};
+    const base = `${(c.nachname||'').trim()}${(c.vorname||'').trim()}`.replace(/\s+/g,'');
+    if(base) return base.slice(0,18);
+    return '';
+  }
+
+  function _orderRows(payload){
+    const qtyMap = Object.fromEntries((payload?.items||[]).map(it => [it.id, Number(it.qty||0)]));
+    const rows = [];
+    (PG54_ROWS||[]).forEach((r) => {
+      const q = Number(qtyMap[r.key]||0);
+      if(q > 0){
+        const bez = (r.key === "gloves" && payload?.options?.gloves?.size) ? `${r.label} Gr. ${payload.options.gloves.size}` : r.label;
+        rows.push({ pflegepos: r.pos, menge: q, bez });
+      }
+    });
+    const extra = Number(payload?.extras?.washable_bettschutzeinlagen||0);
+    if(extra > 0){
+      rows.push({ pflegepos: '—', menge: extra, bez: 'Waschbare Bettschutzeinlagen (Extra)' });
+    }
+    return rows;
+  }
+
+  async function generateBestellformularPdf(payload){
+    const { PDFDocument } = window.PDFLib || {};
+    if(!PDFDocument) throw new Error('PDFLib nicht verfügbar (CDN nicht geladen).');
+
+    // Statisches Template laden (kannst du mit PDF-XChange bearbeiten)
+    const tplRes = await fetch('bestellformular.pdf', { cache: 'no-store' });
+    if(!tplRes.ok) throw new Error('bestellformular.pdf nicht gefunden.');
+    const tplBytes = await tplRes.arrayBuffer();
+
+    const pdfDoc = await PDFDocument.load(tplBytes);
+    const form = pdfDoc.getForm();
+
+    const c = payload?.customer || {};
+    const today = new Date();
+    const dateStr = _fmtDate(today);
+
+    // Kundenanschrift
+    const name = `${(c.vorname||'').trim()} ${(c.nachname||'').trim()}`.trim();
+    const street = `${(c.strasse||'').trim()} ${(c.hausnr||'').trim()}`.trim();
+    const city = `${(c.plz||'').trim()} ${(c.stadt||'').trim()}`.trim();
+
+    const safeSet = (fieldName, value) => {
+      try{
+        const f = form.getTextField(fieldName);
+        f.setText(String(value ?? ''));
+      }catch(e){
+        // Feld evtl. im Template gelöscht/umbenannt – dann einfach ignorieren
+      }
+    };
+
+    safeSet('K_NAME', name);
+    safeSet('K_STRASSE', street);
+    safeSet('K_ORT', city);
+
+    // Meta rechts
+    safeSet('LS_NR', _lieferscheinNr(payload));
+    safeSet('DATUM', dateStr);
+    safeSet('LIEFERDATUM', dateStr);
+    safeSet('KUNDEN_NR', _customerNr(payload));
+
+    // Positionen
+    const rows = _orderRows(payload) || [];
+    for(let i=0;i<12;i++){
+      const r = rows[i];
+      const idx = String(i+1).padStart(2,'0');
+      safeSet(`POS_${idx}`, r ? String(i+1) : '');
+      safeSet(`PN_${idx}`, r ? (r.pflegepos || '') : '');
+      safeSet(`MENGE_${idx}`, r ? (r.menge != null ? String(r.menge) : '') : '');
+      safeSet(`BEZ_${idx}`, r ? (r.bez || '') : '');
+    }
+
+    // Flatten (damit nichts mehr anklickbar ist)
+    try{ form.flatten(); }catch(e){}
+
+    const bytes = await pdfDoc.save();
+    return new Blob([bytes], { type: 'application/pdf' });
+  }
+
+
+  
+  // =========================================================
+  // E-Mail Versand (Bestellung erstellen)
+  // - Frontend erzeugt das gleiche PDF-Paket wie beim Download
+  // - Versand erfolgt über /api/send-email (Server/SMTP)
+  // =========================================================
+  const ORDER_EMAIL_TO = 'kontakt@pb-marina.de'; // <— Empfänger anpassen
+  const EMAIL_API_ENDPOINT = './api/send-email'; // <— Server-Endpunkt
+
+  const blobToBase64 = (blob) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result || '');
+      const base64 = dataUrl.split(',')[1] || '';
+      resolve(base64);
+    };
+    reader.onerror = () => reject(reader.error || new Error('FileReader Fehler'));
+    reader.readAsDataURL(blob);
+  });
+
+  async function buildMergedPdf(payload){
+    const { PDFDocument } = window.PDFLib || {};
+    if(!PDFDocument) throw new Error('PDFLib nicht verfügbar (CDN nicht geladen).');
+
+    // Wechselerklärung nur wenn bezugsCheck UND consent2 beide aktiv
+    const wechselEnabled = !!(payload?.insurance?.einverstaendnis?.consent2 && payload?.insurance?.bezieht_bereits_pflegehilfsmittel);
+
+    // Immer erzeugen: Bestellformular + Anlage 2
+    const bestellBlob = await generateBestellformularPdf(payload);
+    const anlageBlob  = await generateFilledPdf(payload);
+
+    // Optional: Wechselerklärung
+    const wechselBlob = wechselEnabled ? await generateWechselPdf(payload) : null;
+
+    // Zusammenführen in EIN PDF (Reihenfolge: Bestellformular -> Anlage 2 -> (optional) Wechselerklärung)
+    const outDoc = await PDFDocument.create();
+
+    const addBlob = async (b) => {
+      if(!b) return;
+      const bytes = await b.arrayBuffer();
+      const doc = await PDFDocument.load(bytes);
+      const pages = await outDoc.copyPages(doc, doc.getPageIndices());
+      pages.forEach(p => outDoc.addPage(p));
+    };
+
+    await addBlob(bestellBlob);
+    await addBlob(anlageBlob);
+    await addBlob(wechselBlob);
+
+    const mergedBytes = await outDoc.save();
+    const mergedBlob = new Blob([mergedBytes], { type: 'application/pdf' });
+    const filename = wechselBlob ? 'Pflegehilfsmittel_Paket_mit_Wechselerklaerung.pdf' : 'Pflegehilfsmittel_Paket.pdf';
+    return { blob: mergedBlob, filename, wechsel: !!wechselBlob };
+  }
+
+  async function sendOrderEmail(payload){
+    // Minimale Checks wie beim Download
+    renderBar();
+    if(!inBudget()) return;
+    if(!glovesSizeOk()) return;
+
+    const c1 = !!payload?.insurance?.einverstaendnis?.consent1;
+    const c2 = !!payload?.insurance?.einverstaendnis?.consent2;
+    if(!(c1 || c2)){
+      alert('Bitte aktiviere zuerst mindestens ein Einverständnis-Häkchen in Schritt 3.');
+      return;
+    }
+
+    // Paket erzeugen
+    const { blob, filename, wechsel } = await buildMergedPdf(payload);
+    const pdfBase64 = await blobToBase64(blob);
+
+    const c = payload?.customer || {};
+    const subject = `Bestellung Pflegehilfsmittel – ${String(c.vorname||'').trim()} ${String(c.nachname||'').trim()}`.trim();
+    const text =
+`Neue Bestellung aus dem Konfigurator.
+
+Kunde: ${String(c.vorname||'').trim()} ${String(c.nachname||'').trim()}
+Adresse: ${String(c.strasse||'').trim()} ${String(c.hausnr||'').trim()}, ${String(c.plz||'').trim()} ${String(c.stadt||'').trim()}
+Telefon: ${String(c.telefon||'').trim()}
+E-Mail: ${String(c.email||'').trim()}
+
+Enthaltene Formulare: Bestellformular + Anlage 2${wechsel ? ' + Wechselerklärung' : ''}
+
+(Automatisch gesendet)`;
+
+    // An API senden (Server muss SMTP konfiguriert haben)
+    const res = await fetch(EMAIL_API_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: ORDER_EMAIL_TO,
+        subject,
+        text,
+        filename,
+        pdfBase64,
+        customer: c
+      })
+    });
+
+    if(!res.ok){
+      let msg = 'E-Mail Versand fehlgeschlagen.';
+      try{
+        const j = await res.json();
+        if(j && j.error) msg += ' ' + j.error;
+      }catch(e){}
+      throw new Error(msg);
+    }
+
+    return true;
+  }
+
+
+// =========================================================
+  // 1 Button: PDF Download (Anlage 2 immer + optional Wechselerklärung)
+  // - Wenn Wechselerklärung NICHT gewählt: nur Anlage 2 herunterladen
+  // - Wenn gewählt: Anlage 2 + Wechselerklärung zu EINEM PDF zusammenführen
+  // =========================================================
+
+  async function downloadAllPdfs(payload){
+    const { blob, filename } = await buildMergedPdf(payload);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url);}catch{} }, 2000);
+  }
+
+
+    const mergedBytes = await outDoc.save();
+    const mergedBlob = new Blob([mergedBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(mergedBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = wechselBlob ? 'Pflegehilfsmittel_Paket_mit_Wechselerklaerung.pdf' : 'Pflegehilfsmittel_Paket.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>{ try{ URL.revokeObjectURL(url);}catch{} }, 2000);
+  }
+
+  // =========================================================
+  // Wechselerklärung automatisch ausfüllen und herunterladen
+  // =========================================================
+  async function generateWechselPdf(payload) {
+    const { PDFDocument } = window.PDFLib || {};
+    if (!PDFDocument) throw new Error('PDFLib nicht verfügbar (CDN nicht geladen).');
+
+    const srcBytes = await fetchArrayBuffer('./wechsel.pdf');
+    const pdfDoc = await PDFDocument.load(srcBytes);
+    const form = pdfDoc.getForm();
+
+    const safeT = (v) => String(v ?? '').trim();
+    const setT = (name, value) => {
+      try { form.getTextField(name).setText(safeT(value)); } catch (e) {}
+    };
+
+    const c = payload?.customer || {};
+    const ins = payload?.insurance || {};
+
+    // Datum heute
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = String(today.getFullYear());
+    const todayPretty = `${dd}.${mm}.${yyyy}`;
+    // Versorgungsbeginn = 1. des Folgemonats
+    const nextMonth = new Date(today.getFullYear(), today.getMonth()+1, 1);
+    const nextMonthFirst = `01.${String(nextMonth.getMonth()+1).padStart(2,'0')}.${nextMonth.getFullYear()}`;
+
+    // Geburtsdatum formatieren
+    const dobPretty = (() => {
+      const s = safeT(c.geburtsdatum);
+      if (!s) return '';
+      const m = s.match(/(\d{1,2})\D+(\d{1,2})\D+(\d{2,4})/);
+      if (m) {
+        const d2 = String(m[1]).padStart(2, '0');
+        const m2 = String(m[2]).padStart(2, '0');
+        let y2 = String(m[3]);
+        if (y2.length === 2) y2 = (Number(y2) >= 50 ? '19' + y2 : '20' + y2);
+        return `${d2}.${m2}.${y2}`;
+      }
+      return s;
+    })();
+
+    const versValue = safeT(ins.versichertennummer).toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const ort = safeT(c.stadt);
+    const ortDatum = ort ? `${ort}, ${todayPretty}` : todayPretty;
+
+    setT('txt_name', safeT(c.nachname));
+    setT('txt_vorname', safeT(c.vorname));
+    setT('txt_geburtsdatum', dobPretty);
+    setT('txt_versichertennummer', versValue);
+    setT('txt_pflegekasse', safeT(ins.provider));
+    setT('txt_versorgungsbeginn_ab', nextMonthFirst);
+    setT('txt_ort_datum', ortDatum);
+
+    // Digitale Unterschrift als Bild einzeichnen
+    const dataUrl = ins?.signatures?.insured || '';
+    if (dataUrl && dataUrl.startsWith('data:image')) {
+      const base64 = dataUrl.split(',')[1] || '';
+      const bytes = Uint8Array.from(atob(base64), ch => ch.charCodeAt(0));
+      let img;
+      try { img = await pdfDoc.embedPng(bytes); } catch (e) { img = null; }
+      if (img) {
+        try {
+          const sigBtn = form.getButton('sig_unterschrift');
+          try { sigBtn.setImage(img); } catch (e) {}
+        } catch (e) {}
+        const page = pdfDoc.getPages()[0];
+        // Koordinaten des sig_unterschrift-Feldes: [46, 96.88, 307, 136.88]
+        const x = 46, y = 96.88, w = 261, h = 40;
+        const dims = img.scale(1);
+        const scale = Math.min(w / dims.width, h / dims.height);
+        const drawW = dims.width * scale;
+        const drawH = dims.height * scale;
+        const dx = x + (w - drawW) / 2;
+        const dy = y + (h - drawH) / 2;
+        page.drawImage(img, { x: dx, y: dy, width: drawW, height: drawH });
+      }
+    }
+
+    try { form.updateFieldAppearances(); } catch (e) {}
+    try { form.flatten(); } catch (e) {}
+
+    const pdfBytes = await pdfDoc.save();
+    return new Blob([pdfBytes], { type: 'application/pdf' });
+  }
+
+  async function downloadWechselPdf(payload) {
+    if(!(payload?.insurance?.einverstaendnis?.consent2 && payload?.insurance?.bezieht_bereits_pflegehilfsmittel)){
+      alert('Wechselerklärung wird nur erzeugt, wenn beide Häkchen gesetzt sind ("Beziehen Sie bereits..." + Marina Pflegebox).');
+      return;
+    }
+    try {
+      const blob = await generateWechselPdf(payload);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Wechselerklaerung_Ausgefuellt.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 2000);
+    } catch (err) {
+      console.error('Wechselerklärung Fehler:', err);
+      alert('Fehler beim Erstellen der Wechselerklärung: ' + err.message);
+    }
+  }
+
+
+
+  // Buttons
+
+  // Versicherungsart Buttons (gesetzlich/privat) + Beihilfe als Zusatz (Toggle)
+  const insTypePublic = document.getElementById('insTypePublic');
+  const insTypePrivate = document.getElementById('insTypePrivate');
+  const insToggleAid = document.getElementById('insToggleAid');
+  const insTypeHidden = document.getElementById('versicherungsart');
+  const beihilfeAktivHidden = document.getElementById('beihilfeAktiv');
+  const kkNameInput = document.getElementById('krankenkasseName');
+
+  // Beihilfe-Prozentsatz UI
+  const aidPercentWrap = document.getElementById('aidPercentWrap');
+  const aidHidden = document.getElementById('beihilfeProzent');
+  const aidBtns = [
+    document.getElementById('aid50'),
+    document.getElementById('aid70'),
+    document.getElementById('aid80'),
+  ].filter(Boolean);
+
+  const setAidPercent = (val) => {
+    if(aidHidden) aidHidden.value = String(val || '').trim();
+    aidBtns.forEach(btn => btn.classList.toggle('active', String(btn.dataset.aid) === String(val)));
+    if(currentStep === 3) buildOutput(false);
+  };
+
+  aidBtns.forEach(btn => {
+    btn.addEventListener('click', () => setAidPercent(btn.dataset.aid));
+  });
+
+  const setInsuranceType = (type) => {
+    // type: 'public' | 'private'
+    const isPublic = type === 'public';
+    const isPrivate = type === 'private';
+
+    insTypePublic?.classList.toggle('active', isPublic);
+    insTypePrivate?.classList.toggle('active', isPrivate);
+
+    if(insTypeHidden){
+      insTypeHidden.value = isPublic ? 'gesetzlich versichert' : 'privat versichert';
+    }
+
+    // Placeholder je nach Auswahl (Beihilfe ist nur Zusatz)
+    if(kkNameInput){
+      kkNameInput.placeholder = isPublic
+        ? 'z. B. Techniker Krankenkasse'
+        : 'z. B. Allianz (PKV)';
+    }
+
+    if(currentStep === 3) buildOutput(false);
+  };
+
+  const setBeihilfeEnabled = (enabled) => {
+    const on = !!enabled;
+    if(beihilfeAktivHidden) beihilfeAktivHidden.value = on ? '1' : '0';
+
+    insToggleAid?.classList.toggle('active', on);
+    if(insToggleAid) insToggleAid.setAttribute('aria-pressed', on ? 'true' : 'false');
+
+    // Beihilfe-Prozent nur bei aktivierter Beihilfe anzeigen
+    if(aidPercentWrap){
+      aidPercentWrap.classList.toggle('hidden', !on);
+    }
+
+    // Wenn Beihilfe AUS: Prozent zurücksetzen
+    if(!on){
+      setAidPercent('');
+    }
+
+    if(currentStep === 3) buildOutput(false);
+  };
+
+  insTypePublic?.addEventListener('click', () => setInsuranceType('public'));
+  insTypePrivate?.addEventListener('click', () => setInsuranceType('private'));
+  insToggleAid?.addEventListener('click', () => {
+    const currentlyOn = (String(beihilfeAktivHidden?.value || '0') === '1');
+    setBeihilfeEnabled(!currentlyOn);
+  });
+  kkNameInput?.addEventListener('input', () => { if(currentStep === 3) buildOutput(false); });
+
+  // Step 1: Ohne Pflegegrad kein Weiter
+
+  const next1 = document.getElementById("next1");
+  const pgSelect = document.getElementById("pflegegrad");
+  const pgHint = document.getElementById("pgHint");
+  const toggleNext1 = () => {
+    const ok = !!(pgSelect && String(pgSelect.value || "").trim());
+    if(next1) next1.disabled = !ok;
+    if(pgHint) pgHint.style.display = ok ? "none" : "block";
+  };
+  if(pgSelect){
+    toggleNext1();
+    pgSelect.addEventListener("change", toggleNext1);
+  }
+
+  // Step 1: Budget sperren (zusätzlich zu readonly)
+  const lockBudget = () => {
+    if(!budgetInput) return;
+    const fixed = String(budgetInput.getAttribute("value") || budgetInput.value || "42");
+    budgetInput.value = fixed;
+  };
+  if(budgetInput){
+    budgetInput.setAttribute("readonly", "");
+    lockBudget();
+    budgetInput.addEventListener("keydown", (e)=>e.preventDefault());
+    budgetInput.addEventListener("wheel", (e)=>{ e.preventDefault(); budgetInput.blur(); }, {passive:false});
+    budgetInput.addEventListener("input", lockBudget);
+    budgetInput.addEventListener("change", lockBudget);
+  }
+  // Pflegegrad Sync (Step 1 <-> Step 3)
+  const pg1 = document.getElementById("pflegegrad");
+  const pg2 = document.getElementById("pflegegrad2");
+  if(pg1 && pg2){
+    pg2.value = pg1.value || "";
+    pg1.addEventListener("change", () => { pg2.value = pg1.value || ""; });
+    pg2.addEventListener("change", () => { pg1.value = pg2.value || ""; });
+  }
+
+  // Geburtsdatum: während des Tippens automatisch zu TT.MM.JJJJ formatieren
+  const dobInput = document.getElementById('geburtsdatum');
+  if(dobInput){
+    dobInput.addEventListener('input', () => {
+      const prev = dobInput.value;
+      const next = normalizeDob(prev);
+      if(next !== prev) dobInput.value = next;
+    });
+    dobInput.addEventListener('blur', () => {
+      dobInput.value = normalizeDob(dobInput.value);
+    });
+  }
+
+  document.getElementById("next1").addEventListener("click", tryNext);
+  document.getElementById("next2").addEventListener("click", tryNext);
+  document.getElementById("next3").addEventListener("click", tryNext);
+
+  // Weiter zur Übersicht: nur consent1 (Anlage 2) ist Pflicht; consent2 optional
+  function updateNext3Lock(){
+    const btn = document.getElementById('next3');
+    if(!btn) return;
+    const c1 = !!document.getElementById('consent1')?.checked;
+    btn.disabled = !c1;
+  }
+  ['consent1','consent2'].forEach(id=>{
+    const el = document.getElementById(id);
+    el && el.addEventListener('change', updateNext3Lock);
+  });
+  updateNext3Lock();
+
+  document.getElementById("back2").addEventListener("click", tryBack);
+  document.getElementById("back3").addEventListener("click", tryBack);
+  document.getElementById("back4").addEventListener("click", tryBack);
+
+  // PDF Download (ein Button)
+  if(btnDownload) btnDownload.addEventListener('click', async () => {
+    try{
+      renderBar();
+      if(!inBudget()) return;
+      if(!glovesSizeOk()) return;
+      const p = buildOutput(false);
+      // Wenn keine Einverständnisse, keine PDF
+      const c1 = !!p?.insurance?.einverstaendnis?.consent1;
+      const c2 = !!p?.insurance?.einverstaendnis?.consent2;
+      if(!(c1 || c2)){
+        alert('Bitte aktiviere zuerst mindestens ein Einverständnis-Häkchen in Schritt 3.');
+        return;
+      }
+      await downloadAllPdfs(p);
+    }catch(e){
+      console.error(e);
+      alert('PDF Download fehlgeschlagen. Bitte erneut versuchen.');
+    }
+  });
+
+
+  // Bestellung erstellen -> PDF-Paket per E-Mail versenden
+  if(btnCreateOrder) btnCreateOrder.addEventListener('click', async () => {
+    try{
+      const p = buildOutput(false);
+      await sendOrderEmail(p);
+      alert('Bestellung wurde per E-Mail versendet.');
+    }catch(e){
+      console.error(e);
+      alert((e && e.message) ? e.message : 'E-Mail Versand fehlgeschlagen.');
+    }
+  });
+
+  document.getElementById("btnReset").addEventListener("click", () => {
+    Object.keys(state).forEach(k => state[k] = 0);
+    options.gloves.size = "";
+    extraWashableCount = 0;
+    setExtraWashable(0);
+    (document.getElementById('pflegegrad').value = '');
+    const ids = ['pflegegrad2','anrede','titel','vorname','nachname','strasse','hausnr','adresszusatz','plz','stadt','geburtsdatum','note','altAdresseText','versicherungsart','beihilfeAktiv','beihilfeProzent','krankenkasseName','versichertennummer','betreuungName','betreuungRelation','telefon','email','bemerkung'];
+    ids.forEach(id => { const el=document.getElementById(id); if(!el) return; if(el.type==='checkbox') el.checked=false; else el.value=''; });
+    // Versicherungsart UI zurücksetzen
+const vaEl = document.getElementById('versicherungsart');
+    if(vaEl) vaEl.value = 'gesetzlich versichert';
+    if(typeof setInsuranceType === 'function'){
+      setInsuranceType('public');
+      if(typeof setBeihilfeEnabled === 'function') setBeihilfeEnabled(false);
+    }else{
+      // Fallback: Klassen manuell
+      document.getElementById('insTypePublic')?.classList.add('active');
+      document.getElementById('insTypePrivate')?.classList.remove('active');
+      document.getElementById('insToggleAid')?.classList.remove('active');
+      const apw = document.getElementById('aidPercentWrap');
+      if(apw) apw.classList.add('hidden');
+    }
+    const abw = document.getElementById('abweichend'); if(abw) abw.checked=false;
+    const bzc=document.getElementById('bezugsCheck'); if(bzc) bzc.checked=false;
+    ['repCheck','consent1','consent2','consent3'].forEach(id=>{const el=document.getElementById(id); if(el) el.checked=false;});
+    updateConsent2State();
+    signature.insured='';
+    signature.care='';
+    if(signStatusInsured) signStatusInsured.textContent='Noch keine Unterschrift (Versicherte/r) erfasst.';
+    if(signStatusCare) signStatusCare.textContent='Noch keine Unterschrift (Betreuungsperson) erfasst.';
+    out.textContent = "{}";
+    renderProducts();
+    renderBar();
+    setStep(0);
+  });
+
+  budgetInput.addEventListener("input", () => {
+    renderBar();
+    if(currentStep === 3) buildOutput(false);
+  });
+
+  
+  // Gesetzlicher Vertreter vorhanden -> repOnly Felder ein-/ausblenden
+  const repCheck = document.getElementById('repCheck');
+  const repOnlyEls = Array.from(document.querySelectorAll('.repOnly'));
+  const betreuungNameEl = document.getElementById('betreuungName');
+  const betreuungRelEl = document.getElementById('betreuungRelation');
+
+  const updateRepUI = (init=false) => {
+    const on = !!repCheck?.checked;
+    repOnlyEls.forEach(el => el.classList.toggle('hidden', !on));
+
+    // Wenn AUS: Werte + Unterschrift löschen
+    if(!on){
+      if(betreuungNameEl) betreuungNameEl.value = '';
+      if(betreuungRelEl) betreuungRelEl.value = '';
+      if(signature) signature.care = '';
+      if(signStatusCare) signStatusCare.textContent = 'Nicht erforderlich (kein gesetzl. Vertreter ausgewählt).';
+    } else {
+      if(signStatusCare && !signature?.care) signStatusCare.textContent = 'Noch keine Unterschrift (Betreuungsperson) erfasst.';
+    }
+
+    if(currentStep === 3) buildOutput(false);
+  };
+
+  if(repCheck){
+    repCheck.addEventListener('change', () => updateRepUI(false));
+    // Initial (Startzustand)
+    updateRepUI(true);
+  }
+
+// UI Toggles
+  const abw = document.getElementById('abweichend');
+  const altWrap = document.getElementById('altAddress');
+  if(abw && altWrap){
+    abw.addEventListener('change', () => {
+      altWrap.style.display = abw.checked ? 'block' : 'none';
+    });
+  }
+
+  const bzc = document.getElementById('bezugsCheck');
+  const bemWrap = document.getElementById('bemerkungWrap');
+  const consent2El = document.getElementById('consent2');
+
+  // consent2 (Marina Pflegebox) nur anklickbar wenn bezugsCheck gesetzt ist
+  function updateConsent2State() {
+    if (!consent2El) return;
+    if (bzc && bzc.checked) {
+      consent2El.disabled = false;
+      consent2El.closest('label')?.style.removeProperty('opacity');
+      consent2El.closest('label')?.style.removeProperty('cursor');
+    } else {
+      consent2El.disabled = true;
+      consent2El.checked = false;
+      if (consent2El.closest('label')) {
+        consent2El.closest('label').style.opacity = '0.4';
+        consent2El.closest('label').style.cursor = 'not-allowed';
+      }
+    }
+  }
+
+  if(bzc && bemWrap){
+    bzc.addEventListener('change', () => {
+      bemWrap.style.display = bzc.checked ? 'block' : 'none';
+      updateConsent2State();
+    });
+  }
+
+  // Initialzustand setzen
+  updateConsent2State();
+
+
+// Einverständnisse: beide dürfen/sollen gemeinsam gesetzt werden.
+// (Weiter-Button wird oben bereits gesperrt, solange nicht BEIDE angehakt sind.)
+// ⚠️ Keine Exklusiv-Logik mehr!
+
+  // Signature modal (Canvas)
+  const signModal = document.getElementById('signModal');
+  const signClose = document.getElementById('signClose');
+  const signClear = document.getElementById('signClear');
+  const signSave = document.getElementById('signSave');
+  const signTitle = document.getElementById('signTitle');
+  const canvas = document.getElementById('signCanvas');
+  const ctx = canvas?.getContext?.('2d');
+
+  function openSign(target){
+    if(!signModal || !canvas || !ctx) return;
+    signTarget = target || 'insured';
+    if(signTitle){
+      signTitle.textContent = signTarget === 'care'
+        ? 'Unterschrift Betreuungsperson'
+        : 'Unterschrift Versicherte/r';
+    }
+    signModal.style.display = 'block';
+    resizeCanvas();
+    // If existing signature, draw it faintly as background
+    const existing = signature?.[signTarget] || '';
+    if(existing){
+      const img = new Image();
+      img.onload = () => {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      };
+      img.src = existing;
+    }else{
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+  }
+  function closeSign(){ if(signModal) signModal.style.display='none'; }
+
+  function resizeCanvas(){
+    // keep CSS size, set internal pixel size for crisp drawing
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); // draw in CSS pixels
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#111';
+  }
+
+  let drawing = false;
+  let last = null;
+
+  function getPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left);
+    const y = (e.clientY - rect.top);
+    return {x,y};
+  }
+
+  function startDraw(e){
+    drawing = true;
+    last = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+  }
+  function moveDraw(e){
+    if(!drawing) return;
+    const p = getPos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+  }
+  function endDraw(){
+    drawing = false;
+    last = null;
+  }
+
+  if(canvas){
+    canvas.addEventListener('pointerdown', (e)=>{ e.preventDefault(); canvas.setPointerCapture(e.pointerId); startDraw(e); });
+    canvas.addEventListener('pointermove', (e)=>{ e.preventDefault(); moveDraw(e); });
+    canvas.addEventListener('pointerup', (e)=>{ e.preventDefault(); endDraw(); });
+    canvas.addEventListener('pointercancel', (e)=>{ e.preventDefault(); endDraw(); });
+  }
+
+  function canvasHasInk(){
+    // quick check: see if any pixel non-transparent
+    const img = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    for(let i=3;i<img.length;i+=20){ // sample
+      if(img[i] !== 0) return true;
+    }
+    return false;
+  }
+
+  if(btnSignInsured) btnSignInsured.addEventListener('click', () => openSign('insured'));
+  if(btnSignCare) btnSignCare.addEventListener('click', () => openSign('care'));
+  if(signClose) signClose.addEventListener('click', closeSign);
+  if(signModal) signModal.addEventListener('click', (e)=>{ if(e.target === signModal) closeSign(); });
+
+  if(signClear) signClear.addEventListener('click', ()=>{
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    signature[signTarget] = '';
+    if(signTarget === 'care'){
+      if(signStatusCare) signStatusCare.textContent='Noch keine Unterschrift (Betreuungsperson) erfasst.';
+    }else{
+      if(signStatusInsured) signStatusInsured.textContent='Noch keine Unterschrift (Versicherte/r) erfasst.';
+    }
+    if(currentStep === 3) buildOutput(false);
+  });
+
+  if(signSave) signSave.addEventListener('click', ()=>{
+    if(!canvasHasInk()){
+      alert('Bitte unterschreiben (das Feld ist noch leer).');
+      return;
+    }
+
+    // ✅ Wunsch: Wenn digitale Unterschrift gesetzt wird, sollen BEIDE Einverständnisse (Bild 1) automatisch gesetzt werden.
+    const c1 = document.getElementById("consent1");
+    const c2 = document.getElementById("consent2");
+    if(c1) c1.checked = true;
+    if(c2) c2.checked = true;
+    try{ updateNext3Lock(); }catch(e){}
+    signature[signTarget] = canvas.toDataURL('image/png');
+    if(signTarget === 'care'){
+      if(signStatusCare) signStatusCare.textContent = 'Unterschrift (Betreuungsperson) erfasst ✅';
+    }else{
+      if(signStatusInsured) signStatusInsured.textContent = 'Unterschrift (Versicherte/r) erfasst ✅';
+    }
+    if(currentStep === 3) buildOutput(false);
+    closeSign();
+  });
+
+
+  // Init
+  document.getElementById("y").textContent = String(new Date().getFullYear());
+  renderProducts();
+  bindExtraWashableUI();
+  renderBar();
+  // PDF-Navigation entfernt (nur Bestellformular-Vorschau)
+  setStep(0);
+</script>
+
+</body>
+</html>
